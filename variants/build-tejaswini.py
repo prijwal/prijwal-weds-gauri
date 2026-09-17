@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the bride-side variant of the site (gauri.prijwal-weds-gauri.in) from this repo.
+"""Build the bride-side variant of the site (invite.prijwal-weds-gauri.in) from this repo.
 
     python3 variants/build-tejaswini.py            # writes ../prijwal-weds-tejaswini
 
@@ -11,7 +11,7 @@ import os, re, shutil, subprocess, sys
 
 SRC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(os.path.dirname(SRC), 'prijwal-weds-tejaswini')
-DOMAIN = 'gauri.prijwal-weds-gauri.in'
+DOMAIN = 'invite.prijwal-weds-gauri.in'
 
 
 SUBS = [
