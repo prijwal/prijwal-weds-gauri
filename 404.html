@@ -144,8 +144,8 @@
   .down.hide{opacity:0;pointer-events:none}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
   /* the whole page hops up a little and settles, repeated until the guest scrolls */
-  body.hop{animation:hop .9s cubic-bezier(.3,.9,.4,1)}
-  @keyframes hop{0%{transform:translateY(0)}35%{transform:translateY(-25vh)}70%{transform:translateY(2vh)}100%{transform:translateY(0)}}
+  body.hop{animation:hop 1.4s cubic-bezier(.35,.8,.4,1)}
+  @keyframes hop{0%{transform:translateY(0)}40%{transform:translateY(-35vh)}75%{transform:translateY(2vh)}100%{transform:translateY(0)}}
 
   /* arch frame with a blush mat */
   .arch{position:relative;padding:10px;border:1px solid var(--gold);border-radius:999px 999px 18px 18px;background:linear-gradient(180deg,var(--white),var(--blush));box-shadow:0 40px 60px -40px rgba(60,47,51,.45)}
@@ -719,7 +719,7 @@
     if (burstLoader) burstLoader();
     var t1 = reduce ? 0 : (fast ? 200 : 550), t2 = reduce ? 50 : t1 + 2300;
     setTimeout(function(){ loader.classList.add('open'); }, t1);
-    setTimeout(function(){ loader.classList.add('gone'); downCue.classList.add('show'); if (!reduce) hopT = setInterval(hop, 2000); }, t2);
+    setTimeout(function(){ loader.classList.add('gone'); downCue.classList.add('show'); if (!reduce) hopT = setInterval(hop, 2400); }, t2);
   }
   /* scroll hint: the page hops every 2s until the guest scrolls, swipes or scrolls with the wheel */
   var downCue = document.getElementById('downCue'), hopT = null;
