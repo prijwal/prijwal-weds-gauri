@@ -137,6 +137,15 @@
   #finale{align-items:end;padding-bottom:2rem}
   #finale .inner{padding-top:0;padding-bottom:0;gap:1.1rem}
   #story .inner{padding-top:46vh}
+  /* bouncing down-arrow cue; shown once the gates are open, hidden once the guest has scrolled */
+  .down{position:absolute;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:4;width:40px;height:40px;margin-left:-20px;padding:0;border:1px solid rgba(201,169,110,.7);border-radius:50%;background:rgba(251,247,241,.85);color:var(--gold-deep);display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .8s ease;animation:bob 1.6s ease-in-out infinite}
+  .down svg{width:18px;height:18px}
+  .down.show{opacity:1}
+  .down.hide{opacity:0;pointer-events:none}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+  /* the whole page hops up a little and settles, repeated until the guest scrolls */
+  body.hop{animation:hop .9s cubic-bezier(.3,.9,.4,1)}
+  @keyframes hop{0%{transform:translateY(0)}35%{transform:translateY(-25vh)}70%{transform:translateY(2vh)}100%{transform:translateY(0)}}
 
   /* arch frame with a blush mat */
   .arch{position:relative;padding:10px;border:1px solid var(--gold);border-radius:999px 999px 18px 18px;background:linear-gradient(180deg,var(--white),var(--blush));box-shadow:0 40px 60px -40px rgba(60,47,51,.45)}
@@ -387,6 +396,7 @@
     <div class="rule rv d1"><svg><use href="#sprig"/></svg></div>
     <p class="eyebrow rv d2">Scroll to meet them</p>
   </div>
+  <button class="down" id="downCue" type="button" aria-label="Scroll down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
 </section>
 
 <!-- ============ MEET THE COUPLE ============ -->
@@ -709,8 +719,15 @@
     if (burstLoader) burstLoader();
     var t1 = reduce ? 0 : (fast ? 200 : 550), t2 = reduce ? 50 : t1 + 2300;
     setTimeout(function(){ loader.classList.add('open'); }, t1);
-    setTimeout(function(){ loader.classList.add('gone'); }, t2);
+    setTimeout(function(){ loader.classList.add('gone'); downCue.classList.add('show'); if (!reduce) hopT = setInterval(hop, 2000); }, t2);
   }
+  /* scroll hint: the page hops every 2s until the guest scrolls, swipes or scrolls with the wheel */
+  var downCue = document.getElementById('downCue'), hopT = null;
+  function hop(){ document.body.classList.remove('hop'); void document.body.offsetWidth; document.body.classList.add('hop'); }
+  function stopHop(){ if (hopT){ clearInterval(hopT); hopT = null; } document.body.classList.remove('hop'); }
+  ['wheel','touchstart','keydown'].forEach(function(ev){ window.addEventListener(ev, stopHop, {passive: true}); });
+  window.addEventListener('scroll', function(){ if (window.scrollY > 10) stopHop(); downCue.classList.toggle('hide', window.scrollY > window.innerHeight * .5); }, {passive: true});
+  downCue.addEventListener('click', function(){ stopHop(); document.getElementById('couple').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); });
   if (!reduce) setTimeout(function(){ loader.classList.add('sweep'); }, 2200);
   autoT = setTimeout(function(){ openInvite(false); }, reduce ? 100 : 3500);
   loader.addEventListener('click', function(){ openInvite(true); });
