@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Prijwal & Gauri</title>
-<meta name="description" content="Prijwal & Gauri — 26 & 27 November 2026, Mannat Palace, Gwalior">
+<meta name="description" content="Prijwal & Gauri — 26 – 27 November 2026, Mannat Palace, Gwalior">
 <meta property="og:title" content="Prijwal & Gauri — Wedding Invitation">
-<meta property="og:description" content="26 & 27 November 2026 · Mannat Palace Resort & Banquet, Gwalior">
+<meta property="og:description" content="26 – 27 November 2026 · Mannat Palace Resort & Banquet, Gwalior">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://prijwal-weds-gauri.in/">
 <meta property="og:image" content="https://prijwal-weds-gauri.in/wedding-photos-v4/couple-date.jpg">
@@ -56,6 +56,8 @@
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
+  html.snap{scroll-snap-type:y mandatory}
+  #story,#couple,#date,#events{scroll-snap-align:start;scroll-snap-stop:always}
   body{background:var(--ivory);color:var(--ink);font-family:var(--body);font-size:20px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   ::selection{background:var(--blush-2);color:var(--rosewood)}
   a{color:inherit}
@@ -66,13 +68,10 @@
   /* =====================================================================
      TYPE ROLES
      ===================================================================== */
-  .eyebrow{font-family:var(--sans);font-weight:500;font-size:.68rem;letter-spacing:.32em;text-transform:uppercase;color:var(--sage-deep);display:inline-flex;align-items:center;gap:.9rem;margin:0;white-space:nowrap}
+  .eyebrow{font-family:var(--sans);font-weight:600;font-size:.76rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sage-deep);display:inline-flex;align-items:center;gap:.9rem;margin:0;white-space:nowrap}
   .eyebrow::before,.eyebrow::after{content:"";width:26px;height:1px;background:var(--gold);flex:none}
   .line{font-size:clamp(1.3rem,4.6vw,1.65rem);font-weight:500;font-style:italic;line-height:1.45;text-wrap:balance;max-width:30ch;margin:0 auto;color:var(--ink)}
-  .name{font-family:var(--display);font-weight:600;font-size:clamp(1.3rem,5.4vw,2.4rem);letter-spacing:.16em;text-transform:uppercase;line-height:1.3;margin:0;text-wrap:balance;color:var(--rosewood)}
   .script{font-family:var(--script);font-weight:400;line-height:1.1}
-  .parents{font-size:clamp(1rem,3.5vw,1.15rem);margin:0;color:var(--ink-soft);line-height:1.4}
-  .parents small{display:block;font-family:var(--sans);font-weight:500;font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sage);margin-bottom:.35rem}
   .hindi{font-family:var(--hindi);font-size:.95rem;letter-spacing:.08em;color:var(--gold-deep);margin:0}
   .gild{background:linear-gradient(100deg,#8C6D3B 0%,#C9A96E 22%,#F1E3BE 50%,#C9A96E 78%,#8C6D3B 100%);background-size:240% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:gild 7s linear infinite}
   @keyframes gild{to{background-position:240% 0}}
@@ -80,7 +79,7 @@
   /* =====================================================================
      SCENES
      ===================================================================== */
-  .scene{position:relative;min-height:100svh;display:grid;place-items:center;padding:clamp(4rem,11vh,7rem) 24px;text-align:center;isolation:isolate;overflow:hidden}
+  .scene{position:relative;min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:clamp(4rem,11vh,7rem) 24px;text-align:center;isolation:isolate;overflow:hidden}
   .scene > .inner{position:relative;z-index:3;display:grid;gap:1.5rem;justify-items:center;max-width:640px;width:100%}
   .scene.paper{background:var(--linen),linear-gradient(180deg,var(--white) 0%,var(--ivory) 45%,var(--ivory-2) 100%)}
   .scene.blush{background:var(--linen),radial-gradient(120% 90% at 50% 0%,#FBEFF1 0%,var(--blush) 55%,var(--blush-2) 100%)}
@@ -121,7 +120,7 @@
   .photo{position:relative;overflow:hidden;background:linear-gradient(160deg,var(--blush),var(--ivory-2))}
   .photo img{width:100%;height:100%;object-fit:cover;object-position:var(--focus,50% 35%)}
   .photo.missing img{display:none}
-  .photo.missing::after{content:attr(data-label);position:absolute;inset:0;display:grid;place-items:center;padding:1rem;font-family:var(--sans);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rose-deep);text-align:center}
+  .photo.missing::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,var(--blush),var(--ivory-2))}
 
   /* photo scenes: the picture stays bright at the top and melts into ivory where the words sit */
   .backdrop{position:absolute;inset:-9% 0;z-index:0;transform:translate3d(0,var(--py,0px),0);will-change:transform}
@@ -131,15 +130,15 @@
   @keyframes ken{from{transform:scale(1.02)}to{transform:scale(1.12)}}
   .backdrop .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(251,247,241,.92) 0%,rgba(251,247,241,0) 16%,rgba(251,247,241,0) 34%,rgba(251,247,241,.6) 52%,rgba(251,247,241,.96) 68%,var(--ivory) 100%)}
   #finale .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,0) 0%,rgba(251,247,241,0) 50%,rgba(251,247,241,.75) 58%,rgba(251,247,241,.95) 66%,var(--ivory) 100%)}
-  #story .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,0) 0%,rgba(251,247,241,.55) 70%,rgba(251,247,241,.9) 80%,rgba(251,247,241,.9) 93%,var(--ivory) 100%)}
+  #story .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,0) 0%,rgba(251,247,241,.6) 62%,rgba(251,247,241,.92) 72%,rgba(251,247,241,.92) 93%,var(--ivory) 100%)}
   .scene.photo-scene{color:var(--ink)}
   .scene.photo-scene .inner{padding-top:34vh}
   #finale{align-items:end;padding-bottom:2rem}
   #finale .inner{padding-top:0;padding-bottom:0;gap:1.1rem}
-  #story .inner{padding-top:46vh}
+  #story .inner{padding-top:50vh}
   /* bouncing down-arrow cue; shown once the gates are open, hidden once the guest has scrolled */
-  .down{position:absolute;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:4;width:40px;height:40px;margin-left:-20px;padding:0;border:1px solid rgba(201,169,110,.7);border-radius:50%;background:rgba(251,247,241,.85);color:var(--gold-deep);display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .8s ease;animation:bob 1.6s ease-in-out infinite}
-  .down svg{width:18px;height:18px}
+  .down{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:4;width:44px;height:44px;margin-left:-22px;padding:0;border:1px solid rgba(201,169,110,.7);border-radius:50%;background:rgba(251,247,241,.85);color:var(--gold-deep);display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .8s ease;animation:bob 1.6s ease-in-out infinite}
+  .down svg{width:20px;height:20px}
   .down.show{opacity:1}
   .down.hide{opacity:0;pointer-events:none}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
@@ -176,11 +175,11 @@
   #loader.open .door.r{transform:rotateY(110deg)}
   #loader canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
   .seal-wrap{position:absolute;inset:0;z-index:4;display:grid;place-items:center;text-align:center;padding:24px;transition:opacity .8s ease,transform .9s var(--ease)}
-  .seal-wrap > div{display:grid;gap:1.3rem;justify-items:center}
+  .seal-wrap > div{display:grid;gap:2.6rem;justify-items:center}
   #loader.opening .seal-wrap{opacity:0;transform:scale(1.14);pointer-events:none}
   .seal{position:relative;width:min(64vw,260px);height:min(64vw,260px);border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 40% 30%,var(--white),var(--blush) 75%);border:1px solid var(--gold);box-shadow:0 0 0 10px var(--ivory),0 0 0 11px rgba(201,169,110,.6),0 40px 80px -30px rgba(60,47,51,.35);animation:seal-in 1.4s var(--ease) both}
   @keyframes seal-in{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
-  .seal .wreath{position:absolute;inset:-26%;width:152%;height:152%;animation:spin 90s linear infinite;pointer-events:none}
+  .seal .wreath{position:absolute;inset:-20%;width:140%;height:140%;animation:spin 90s linear infinite;pointer-events:none}
   .seal .wreath .ring{stroke-dasharray:742;stroke-dashoffset:742;animation:draw 2.2s .2s var(--ease) forwards}
   .seal .wreath .lf,.seal .wreath .bl{opacity:0;animation:fade 1s var(--ease) forwards;animation-delay:var(--d)}
   @keyframes draw{to{stroke-dashoffset:0}}
@@ -195,31 +194,31 @@
   .door .sheen{position:absolute;inset:0;background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.75) 50%,transparent 58%);background-size:260% 100%;background-position:120% 0;pointer-events:none}
   #loader.sweep .door .sheen{animation:sweep 1.5s ease-in-out forwards}
   @keyframes sweep{to{background-position:-60% 0}}
-  .tap{position:absolute;left:0;right:0;bottom:calc(28px + env(safe-area-inset-bottom,0px));z-index:5;margin:0;text-align:center;font-family:var(--sans);font-size:.56rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft);opacity:0;animation:fade-up 1s 2.4s var(--ease) forwards;pointer-events:none}
+  .tap{position:absolute;left:0;right:0;bottom:calc(28px + env(safe-area-inset-bottom,0px));z-index:5;margin:0;text-align:center;font-family:var(--sans);font-weight:500;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft);opacity:0;animation:fade-up .8s 1s var(--ease) forwards;pointer-events:none}
   #loader.opening .tap{opacity:0;animation:none}
   @keyframes fade-up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
   /* =====================================================================
      SAVE THE DATE
      ===================================================================== */
-  #story .story{font-size:clamp(1.3rem,4.8vw,1.75rem);font-weight:500;font-style:italic;line-height:1.45;max-width:28ch;margin:0 auto;color:var(--ink)}
+  #story .story{font-size:clamp(1.4rem,5.2vw,1.9rem);font-weight:600;font-style:italic;line-height:1.4;max-width:32ch;margin:0 auto;color:var(--ink)}
   #story .story mark{background:none;color:var(--rose-deep);font-style:normal;font-weight:600}
   #date .big{font-family:var(--display);font-weight:600;font-size:clamp(1.7rem,7.4vw,3rem);letter-spacing:.08em;line-height:1.2;margin:0}
-  #date .big small{display:block;font-family:var(--sans);font-size:.3em;letter-spacing:.4em;font-weight:500;color:var(--sage-deep);margin-bottom:.7em;text-transform:uppercase;-webkit-text-fill-color:var(--sage-deep)}
+  #date .big small{display:block;font-family:var(--sans);font-size:.42em;letter-spacing:.36em;font-weight:600;color:var(--sage-deep);margin-bottom:.7em;text-transform:uppercase;-webkit-text-fill-color:var(--sage-deep)}
   #date .couple{font-family:var(--script);font-size:clamp(2.6rem,11vw,4.2rem);color:var(--rose-deep);line-height:1.1}
   #date .couple .amp{color:var(--gold-deep);font-size:.7em;margin:0 .1em}
   .countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.5rem,2.5vw,.9rem);width:min(100%,460px);margin-top:.4rem}
   .countdown div{display:grid;gap:.25rem;padding:1rem .2rem .85rem;position:relative;border:1px solid rgba(201,169,110,.6);border-radius:18px;background:rgba(255,255,255,.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 20px 40px -30px rgba(60,47,51,.4)}
   .countdown b{font-family:var(--display);font-weight:600;font-size:clamp(1.6rem,7vw,2.5rem);line-height:1;font-variant-numeric:tabular-nums;color:var(--rose-deep)}
-  .countdown span{font-family:var(--sans);font-size:.55rem;letter-spacing:.28em;text-transform:uppercase;color:var(--sage-deep)}
+  .countdown span{font-family:var(--sans);font-weight:600;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sage-deep)}
   #date .line{color:var(--rose-deep);margin-top:1rem}
   /* Save the date: a slow wash over the photo that turns near-solid ivory where the text sits; the date gets a deeper gold */
-  #date .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,0) 0%,rgba(251,247,241,.35) 48%,rgba(251,247,241,.86) 58%,rgba(251,247,241,.86) 93%,var(--ivory) 100%)}
-  #date .inner{padding-top:56vh}
+  #date .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,0) 0%,rgba(251,247,241,.4) 40%,rgba(251,247,241,.92) 50%,rgba(251,247,241,.92) 93%,var(--ivory) 100%)}
+  #date{height:100vh;height:100svh;min-height:0;align-items:end;padding-bottom:calc(6rem + env(safe-area-inset-bottom,0px))}
+  #date .inner{padding-top:0;padding-bottom:0}
   #date .big .gild{background-image:linear-gradient(100deg,#6E5328 0%,#8C6D3B 22%,#C9A96E 50%,#8C6D3B 78%,#6E5328 100%)}
   @media (max-width:600px){
-    #date .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,0) 0%,rgba(251,247,241,.35) 48%,rgba(251,247,241,.86) 58%,rgba(251,247,241,.86) 93%,var(--ivory) 100%)}
-    #date .inner{padding-top:64vh}
+    #date .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,0) 0%,rgba(251,247,241,.35) 38%,rgba(251,247,241,.86) 48%,rgba(251,247,241,.86) 93%,var(--ivory) 100%)}
   }
 
   /* =====================================================================
@@ -235,18 +234,18 @@
   .knot::before,.knot::after{content:"";position:absolute;left:50%;width:1px;height:clamp(40px,9vw,80px)}
   .knot::before{bottom:100%;background:linear-gradient(180deg,transparent,var(--gold))}
   .knot::after{top:100%;background:linear-gradient(180deg,var(--gold),transparent)}
-  #couple .line{color:var(--rosewood)}
+  #couple .line{color:var(--rosewood);max-width:34ch}
 
   /* =====================================================================
      EVENTS — a timeline
      ===================================================================== */
   #events{display:block;padding-block:clamp(5rem,11vh,7rem)}
-  #events .head{display:grid;gap:1rem;justify-items:center;text-align:center;margin-bottom:2.8rem}
+  #events .head{display:grid;gap:1rem;justify-items:center;text-align:center;margin-bottom:1.6rem}
   #events h2{font-family:var(--display);font-weight:600;font-size:clamp(1.9rem,7vw,2.8rem);letter-spacing:.02em;margin:0;color:var(--rosewood);line-height:1.15}
   #events h2 em{font-style:italic;font-weight:500;color:var(--rose-deep)}
   .timeline{position:relative;display:grid;gap:1.6rem;max-width:520px;margin:0 auto;padding-left:34px;text-align:left}
   .timeline::before{content:"";position:absolute;left:9px;top:12px;bottom:12px;width:1px;background:linear-gradient(180deg,transparent,var(--gold) 6%,var(--gold) 94%,transparent)}
-  .day{position:relative;display:inline-flex;align-items:center;gap:.6rem;font-family:var(--sans);font-weight:500;font-size:.62rem;letter-spacing:.26em;text-transform:uppercase;color:var(--white);background:var(--sage-deep);padding:.55rem 1rem;border-radius:999px;justify-self:start;margin-top:.4rem}
+  .day{position:relative;display:inline-flex;align-items:center;gap:.6rem;font-family:var(--sans);font-weight:600;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--white);background:var(--sage-deep);padding:.55rem 1rem;border-radius:999px;justify-self:start;margin-top:.4rem}
   .day::before{content:"";position:absolute;left:-34px;top:50%;width:19px;height:19px;margin-top:-9.5px;border-radius:50%;background:var(--sage-deep);border:4px solid var(--ivory);box-shadow:0 0 0 1px var(--gold)}
   .ev{position:relative;background:var(--white);border-radius:24px;overflow:hidden;box-shadow:0 30px 60px -34px rgba(60,47,51,.45),0 0 0 1px rgba(201,169,110,.35)}
   .ev::before{content:"";position:absolute;left:-30px;top:32px;width:11px;height:11px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px var(--ivory),0 0 0 5px rgba(201,169,110,.5);z-index:1}
@@ -255,12 +254,12 @@
   .ev.in .photo img{transform:scale(1)}
   .ev:hover .photo img{transform:scale(1.04)}
   .ev .photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(60,47,51,0) 45%,rgba(60,47,51,.62) 100%)}
-  .ev .meta{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:1.1rem 1.3rem;display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;color:var(--white)}
+  .ev .meta{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:1.1rem 1.3rem;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:.6rem 1rem;color:var(--white)}
   .ev .meta h3{font-family:var(--display);font-weight:600;font-size:clamp(1.35rem,5.4vw,1.75rem);line-height:1.15;margin:0;letter-spacing:.02em;text-shadow:0 2px 14px rgba(0,0,0,.35)}
-  .ev .meta .time{flex:none;font-family:var(--sans);font-weight:500;font-size:.66rem;letter-spacing:.16em;padding:.45rem .8rem;border-radius:999px;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-variant-numeric:tabular-nums}
+  .ev .meta .time{flex:none;font-family:var(--sans);font-weight:600;font-size:.74rem;letter-spacing:.14em;padding:.45rem .8rem;border-radius:999px;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-variant-numeric:tabular-nums}
   .ev .body{padding:1.1rem 1.3rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-  .ev p{margin:0;font-style:italic;font-size:1.1rem;color:var(--ink-soft);flex:1 1 200px}
-  .cal{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--sans);font-weight:500;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--sage-deep);padding:.6rem 1rem;border-radius:999px;border:1px solid var(--sage);transition:background .3s,color .3s,transform .4s var(--ease);white-space:nowrap}
+  .ev p{margin:0;font-style:italic;font-size:1.15rem;color:var(--ink);flex:1 1 200px}
+  .cal{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--sans);font-weight:600;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;color:var(--sage-deep);padding:.6rem 1rem;border-radius:999px;border:1px solid var(--sage);transition:background .3s,color .3s,transform .4s var(--ease);white-space:nowrap}
   .cal:hover,.cal:focus-visible{background:var(--sage-deep);color:var(--white);transform:translateY(-1px)}
   .cal svg{width:13px;height:13px}
 
@@ -290,11 +289,11 @@
   .people{display:grid;gap:.8rem;width:min(100%,480px)}
   .person{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.2rem;border-radius:20px;background:var(--white);box-shadow:0 20px 40px -30px rgba(60,47,51,.4),0 0 0 1px rgba(201,169,110,.35);text-align:left}
   .person b{font-family:var(--display);font-weight:600;font-size:1.15rem;letter-spacing:.02em;display:block;color:var(--rosewood)}
-  .person small{color:var(--ink-soft);font-size:1rem;font-style:italic}
-  .person a{display:inline-flex;align-items:center;gap:.5rem;text-decoration:none;font-family:var(--sans);font-variant-numeric:tabular-nums;font-size:.95rem;font-weight:500;color:var(--rosewood);white-space:nowrap;min-height:44px;padding:.2rem .9rem;border-radius:999px;background:var(--blush);transition:background .3s}
+  .person small{color:var(--ink);font-size:1.02rem;font-style:italic}
+  .person a{display:inline-flex;align-items:center;gap:.5rem;text-decoration:none;font-family:var(--sans);font-variant-numeric:tabular-nums;font-size:.95rem;font-weight:600;color:var(--sage-deep);white-space:nowrap;min-height:44px;padding:.2rem .9rem;border-radius:999px;background:var(--white);border:1px solid var(--sage);transition:background .3s,color .3s}
   .person a:hover,.person a:focus-visible{background:var(--blush-2)}
   .person a svg{width:15px;height:15px;color:var(--rose-deep)}
-  .foot{font-family:var(--sans);font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--sage-deep);margin:2rem 0 0}
+  .foot{font-family:var(--sans);font-weight:500;font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--sage-deep);margin:.4rem 0 0}
   .end{font-family:var(--hindi);color:var(--gold-deep);font-size:.95rem;margin:0}
 
   /* =====================================================================
@@ -307,17 +306,17 @@
   @media (max-width:600px){
     body{font-size:19px}
     .scene{padding-inline:20px}
-    .eyebrow{font-size:.6rem;letter-spacing:.24em}
+    .eyebrow{font-size:.72rem;letter-spacing:.24em}
     .eyebrow::before,.eyebrow::after{width:14px}
     .rail{display:none}
-    .flora{width:96px;height:96px;opacity:.8}
+    .flora{width:84px;height:84px;opacity:.8}
     .garland{height:64px}
     .door::after{width:56px}
     .seal{width:min(60vw,230px);height:min(60vw,230px)}
     .backdrop .veil,#finale .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,.92) 0%,rgba(251,247,241,0) 14%,rgba(251,247,241,0) 30%,rgba(251,247,241,.72) 46%,rgba(251,247,241,.97) 60%,var(--ivory) 100%)}
     .backdrop{inset:0;transform:none}
     .scene.photo-scene .inner{padding-top:44vh}
-    #story .inner{padding-top:62vh}
+    #story .inner{padding-top:min(56vh, calc(100vh - 430px));padding-top:min(56vh, calc(100svh - 430px));padding-bottom:4rem}
     #finale .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,0) 0%,rgba(251,247,241,0) 60%,rgba(251,247,241,.75) 67%,rgba(251,247,241,.95) 75%,var(--ivory) 100%)}
     #finale .backdrop img{object-position:2% 30%} /* the couple stand left of centre in the portrait crop */
     #story .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,0) 0%,rgba(251,247,241,.55) 70%,rgba(251,247,241,.9) 80%,rgba(251,247,241,.9) 93%,var(--ivory) 100%)}
@@ -325,15 +324,15 @@
     #couple .inner{gap:.9rem}
     .duo{grid-template-columns:1fr;gap:.9rem;margin-top:0}
     .who{gap:.45rem}
-    .who .arch{max-width:min(46vw,190px);padding:7px}
+    .who .arch{max-width:min(42vw,180px);padding:7px}
     .knot{width:34px;height:34px;font-size:1.25rem}
     .knot::before,.knot::after{height:20px}
-    #couple .line{font-size:clamp(1rem,3.7vw,1.15rem);max-width:26ch}
+    #couple .line{font-size:clamp(1rem,3.7vw,1.15rem);max-width:30ch}
     .countdown{gap:.5rem}
     .countdown div{padding:.85rem .1rem .7rem;border-radius:14px}
-    .timeline{padding-left:26px;gap:1.4rem}
+    .timeline{padding-left:26px;gap:1.4rem;margin-left:-13px;margin-right:13px}
     .timeline::before{left:6px}
-    .day::before{left:-26px;width:15px;height:15px;margin-top:-7.5px;border-width:3px}
+    .day::before{left:-27px;width:15px;height:15px;margin-top:-7.5px;border-width:3px}
     .ev{border-radius:20px}
     .ev::before{left:-24px;width:9px;height:9px}
     .ev .meta{padding:.9rem 1rem}
@@ -342,9 +341,9 @@
     .venue-card{border-radius:22px}
     .venue-card .text{padding:1.5rem 1rem 1.6rem}
     .btn{width:100%;max-width:320px}
-    .person{padding:.9rem 1rem}
-    .person a{padding:.2rem .7rem}
-    .foot span{display:block;line-height:2.1}
+    .person{padding:.9rem 1rem;flex-direction:column;align-items:stretch;gap:.7rem}
+    .person a{padding:.55rem .7rem;justify-content:center}
+    .foot span{display:block;line-height:1.9}
     .foot .dot{display:none}
   }
 
@@ -374,7 +373,7 @@
   <p class="tap" aria-hidden="true">tap to open</p>
   <div class="seal-wrap">
     <div>
-      <p class="hindi">॥ श्री गणेशाय नमः ॥</p>
+      <p class="hindi" lang="hi">॥ श्री गणेशाय नमः ॥</p>
       <div class="seal">
         <svg class="wreath" viewBox="0 0 300 300" aria-hidden="true"></svg>
         <div class="mono">P<span>&amp;</span>G</div>
@@ -392,7 +391,7 @@
   </div>
   <canvas class="petals" data-petals="soft" aria-hidden="true"></canvas>
   <div class="inner">
-    <p class="story rv">Ghar ka sabse chhota ladka mila<br>ghar ki sabse chhoti ladki se…<br><mark>aur ab dono ki kahaani ek hone wali hai!</mark></p>
+    <p class="story rv">Ghar ka sabse chhota ladka mila<br>ghar ki sabse chhoti ladki se…<br><mark>aur ab dono ki kahaani<br>ek hone wali hai!</mark></p>
     <div class="rule rv d1"><svg><use href="#sprig"/></svg></div>
     <p class="eyebrow rv d2">Scroll to meet them</p>
   </div>
@@ -425,7 +424,7 @@
       </figure>
     </div>
     <div class="rule rv d2"><svg><use href="#sprig"/></svg></div>
-    <p class="line rv d3">Ek ladka jiske bina ghar ki raunak adhoori,<br>ek ladki jiski muskaan se ghar khil jaata hai.</p>
+    <p class="line rv d3">Ek ladka jiske bina ghar ki raunak adhoori, ek ladki jiski muskaan se ghar khil jaata&nbsp;hai.</p>
   </div>
 </section>
 
@@ -439,12 +438,13 @@
   <div class="inner">
     <p class="big rv"><small>Save the date</small><span class="gild">26 November 2026</span></p>
     <div class="couple rv d1">Prijwal <span class="amp">&amp;</span> Gauri</div>
-    <div class="countdown rv d2" id="countdown" aria-live="polite" aria-label="Countdown to the wedding">
+    <div class="countdown rv d2" id="countdown" aria-label="Countdown to the wedding">
       <div><b data-cd="d">—</b><span>Days</span></div>
-      <div><b data-cd="h">—</b><span>Hours</span></div>
+      <div><b data-cd="h">—</b><span>Hrs</span></div>
       <div><b data-cd="m">—</b><span>Min</span></div>
       <div><b data-cd="s">—</b><span>Sec</span></div>
     </div>
+    <p class="line rv d2" id="cdDone" hidden style="color:var(--rose-deep)">Aaj hai woh din — milte hain Gwalior mein!</p>
     <p class="line rv d3" style="font-size:clamp(1.1rem,4vw,1.35rem)">Aapke bina yeh sham adhoori hai!</p>
   </div>
 </section>
@@ -458,18 +458,17 @@
     <div class="head">
       <p class="eyebrow rv">Two days of full-on masti</p>
       <h2 class="rv d1">The Wedding <em>Celebrations</em></h2>
-      <div class="rule rv d1"><svg><use href="#sprig"/></svg></div>
     </div>
     <div class="timeline">
       <div class="day rv">Thursday · 26 November 2026</div>
 
       <article class="ev rv">
         <div class="photo" data-label="Carnival &amp; haldi photo — wedding-photos-v4/haldi.jpg"><img loading="lazy" decoding="async" src="wedding-photos-v4/haldi.jpg" alt="" onerror="this.parentNode.classList.add('missing')">
-          <div class="meta"><h3>Carnival Party + Haldi</h3><span class="time">7:00 AM</span></div>
+          <div class="meta"><h3>Carnival Party &amp; Haldi</h3><span class="time">7:00 AM</span></div>
         </div>
         <div class="body">
           <p>Rang, masti aur haldi ki pehli khushboo…</p>
-          <a class="cal" target="_blank" rel="noopener" data-cal="Carnival Party + Haldi|20261126T013000Z|20261126T043000Z"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Add to calendar</a>
+          <a class="cal" target="_blank" rel="noopener" data-cal="Carnival Party & Haldi|20261126T013000Z|20261126T043000Z"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Add to calendar</a>
         </div>
       </article>
 
@@ -547,9 +546,9 @@
   </div>
   <canvas class="petals" data-petals="finale" aria-hidden="true"></canvas>
   <div class="inner" style="z-index:3">
-    <p class="line rv" style="font-size:clamp(1.1rem,4vw,1.35rem)">Naach, gaana, khaana aur dher saara pyaar — sab ready hai. Bas aap aa jaaiye!</p>
+    <p class="line rv" style="font-size:clamp(1.1rem,4vw,1.35rem)">Naach, gaana, khaana aur dher saara pyaar, sab ready hai. Bas aap aa&nbsp;jaaiye!</p>
     <div class="rule rv d1"><svg><use href="#sprig"/></svg></div>
-    <p class="line rv d2" style="color:var(--rose-deep)">Milte hain 25 November ko, Gwalior mein.</p>
+    <p class="line rv d2" style="color:var(--rose-deep)">Aa jaaiye 25 November tak,<br>Gwalior mein milte hain.</p>
   </div>
 </section>
 
@@ -562,17 +561,17 @@
     <p class="eyebrow rv">For any queries</p>
     <div class="people rv d1">
       <div class="person">
-        <div><b>Ramkumar Singh Rajawat</b><small>Groom's Father</small></div>
+        <div><b>Ramkumar Singh Rajawat</b><small>Groom’s Father</small></div>
         <a href="tel:+918109112694"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>81091 12694</a>
       </div>
       <div class="person">
-        <div><b>Arun Singh Rajawat</b><small>Groom's Elder Brother</small></div>
+        <div><b>Arun Singh Rajawat</b><small>Groom’s Elder Brother</small></div>
         <a href="tel:+918602170217"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>86021 70217</a>
       </div>
     </div>
     <div class="rule rv d2"><svg><use href="#sprig"/></svg></div>
     <p class="foot rv d2"><span>Prijwal &amp; Gauri</span><span class="dot"> &nbsp;·&nbsp; </span><span>26 – 27 November 2026</span><span class="dot"> &nbsp;·&nbsp; </span><span>Gwalior</span></p>
-    <p class="end rv d3">॥ शुभ विवाह ॥</p>
+    <p class="end rv d3" lang="hi">॥ शुभ विवाह ॥</p>
   </div>
 </section>
 
@@ -694,7 +693,7 @@
       if (running) raf = requestAnimationFrame(draw);
     }
     init();
-    window.addEventListener('resize', init);
+    var rzP; window.addEventListener('resize', function(){ clearTimeout(rzP); rzP = setTimeout(init, 250); });
     if (mode === 'burst'){
       burstLoader = function(){
         size();
@@ -719,15 +718,22 @@
     if (burstLoader) burstLoader();
     var t1 = reduce ? 0 : (fast ? 200 : 550), t2 = reduce ? 50 : t1 + 2300;
     setTimeout(function(){ loader.classList.add('open'); }, t1);
-    setTimeout(function(){ loader.classList.add('gone'); downCue.classList.add('show'); if (!reduce) hopT = setInterval(hop, 2400); }, t2);
+    setTimeout(function(){ loader.classList.add('gone'); downCue.classList.add('show'); if (!reduce){ hopT = setInterval(hop, 2400); updateSnap(); } }, t2);
   }
-  /* scroll hint: the page hops every 2s until the guest scrolls, swipes or scrolls with the wheel */
-  var downCue = document.getElementById('downCue'), hopT = null;
-  function hop(){ document.body.classList.remove('hop'); void document.body.offsetWidth; document.body.classList.add('hop'); }
-  function stopHop(){ if (hopT){ clearInterval(hopT); hopT = null; } document.body.classList.remove('hop'); }
+  /* scroll hint: the page hops four times, 2.4s apart, stopping early if the guest scrolls, swipes or scrolls with the wheel */
+  var downCue = document.getElementById('downCue'), hopT = null, hops = 0;
+  function hop(){ if (++hops > 4){ stopHop(); return; } document.body.classList.remove('hop'); void document.body.offsetWidth; document.body.classList.add('hop'); }
+  function stopHop(){ if (hopT){ clearInterval(hopT); hopT = null; } document.body.classList.remove('hop'); if (typeof updateSnap === 'function') updateSnap(); }
   ['wheel','touchstart','keydown'].forEach(function(ev){ window.addEventListener(ev, stopHop, {passive: true}); });
-  window.addEventListener('scroll', function(){ if (window.scrollY > 10) stopHop(); downCue.classList.toggle('hide', window.scrollY > window.innerHeight * .5); }, {passive: true});
+  window.addEventListener('scroll', function(){ if (window.scrollY > 40) stopHop(); downCue.classList.toggle('hide', window.scrollY > window.innerHeight * .5); }, {passive: true});
   downCue.addEventListener('click', function(){ stopHop(); document.getElementById('couple').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); });
+
+  /* Page snapping for the first three pages only: the events page below is long and scrolls freely.
+     Mandatory snapping always pulls to the nearest snap point, so it is switched off once the guest is into the events page. */
+  var eventsEl = document.getElementById('events'), snapTick = false;
+  function updateSnap(){ snapTick = false; document.documentElement.classList.toggle('snap', !hopT && window.scrollY < eventsEl.offsetTop - window.innerHeight * .6); }
+  window.addEventListener('scroll', function(){ if (!snapTick){ snapTick = true; requestAnimationFrame(updateSnap); } }, {passive: true});
+  updateSnap();
   if (!reduce) setTimeout(function(){ loader.classList.add('sweep'); }, 2200);
   autoT = setTimeout(function(){ openInvite(false); }, reduce ? 100 : 3500);
   loader.addEventListener('click', function(){ openInvite(true); });
@@ -737,14 +743,16 @@
   var target = new Date('2026-11-26T07:00:00+05:30').getTime();
   var cd = {d: document.querySelector('[data-cd=d]'), h: document.querySelector('[data-cd=h]'), m: document.querySelector('[data-cd=m]'), s: document.querySelector('[data-cd=s]')};
   function pad(n){ return (n < 10 ? '0' : '') + n; }
+  var cdBox = document.getElementById('countdown'), cdDone = document.getElementById('cdDone'), cdT;
   function tick(){
-    var diff = Math.max(0, target - Date.now());
-    cd.d.textContent = Math.floor(diff / 864e5);
+    var diff = target - Date.now();
+    if (diff <= 0){ cdBox.hidden = true; cdDone.hidden = false; clearInterval(cdT); return; }
+    cd.d.textContent = pad(Math.floor(diff / 864e5));
     cd.h.textContent = pad(Math.floor(diff % 864e5 / 36e5));
     cd.m.textContent = pad(Math.floor(diff % 36e5 / 6e4));
     cd.s.textContent = pad(Math.floor(diff % 6e4 / 1e3));
   }
-  tick(); setInterval(tick, 1000);
+  tick(); cdT = setInterval(tick, 1000);
 
   /* ---------- Add to calendar (Google Calendar links) ---------- */
   var venue = 'Mannat Palace Resort & Banquet, Sirol Main Road, New City Center, Dongarpur, Gwalior, Madhya Pradesh 474006';
