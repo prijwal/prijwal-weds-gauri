@@ -202,7 +202,7 @@
      SAVE THE DATE
      ===================================================================== */
   #story .story{font-size:clamp(1.4rem,5.2vw,1.9rem);font-weight:600;font-style:italic;line-height:1.4;max-width:32ch;margin:0 auto;color:var(--ink)}
-  #story .story mark{background:none;color:var(--rose-deep);font-style:normal;font-weight:600}
+  #story .story mark{background:none;color:var(--sage-deep);font-style:normal;font-weight:600}
   #date .big{font-family:var(--display);font-weight:600;font-size:clamp(1.7rem,7.4vw,3rem);letter-spacing:.08em;line-height:1.2;margin:0}
   #date .big small{display:block;font-family:var(--sans);font-size:.42em;letter-spacing:.36em;font-weight:600;color:var(--sage-deep);margin-bottom:.7em;text-transform:uppercase;-webkit-text-fill-color:var(--sage-deep)}
   #date .couple{font-family:var(--script);font-size:clamp(2.6rem,11vw,4.2rem);color:var(--rose-deep);line-height:1.1}
@@ -347,6 +347,13 @@
     .foot .dot{display:none}
   }
 
+  /* Short phone viewports (browser toolbars showing): keep Meet the couple on one screen */
+  @media (max-width:600px) and (max-height:760px){
+    #couple{padding-top:calc(1.4rem + env(safe-area-inset-top,0px));padding-bottom:1.4rem}
+    #couple .inner{gap:.6rem}
+    .duo{gap:.5rem}
+    .who .arch{max-width:min(42vw,180px,calc(40vh - 140px));max-width:min(42vw,180px,calc(40svh - 140px))}
+  }
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
     html.js .rv{opacity:1;transform:none}
