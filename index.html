@@ -124,8 +124,6 @@
   .backdrop{position:absolute;inset:-9% 0;z-index:0;transform:translate3d(0,var(--py,0px),0);will-change:transform}
   .backdrop picture{display:contents}
   .backdrop img{width:100%;height:100%;object-fit:cover;object-position:var(--focus,50% 30%)}
-  .backdrop.ken img{animation:ken 34s ease-in-out infinite alternate}
-  @keyframes ken{from{transform:scale(1.02)}to{transform:scale(1.12)}}
   .backdrop .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(251,247,241,.92) 0%,rgba(251,247,241,0) 16%,rgba(251,247,241,0) 34%,rgba(251,247,241,.6) 52%,rgba(251,247,241,.96) 68%,var(--ivory) 100%)}
   #finale .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,0) 0%,rgba(251,247,241,0) 50%,rgba(251,247,241,.75) 58%,rgba(251,247,241,.95) 66%,var(--ivory) 100%)}
   #story .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,0) 0%,rgba(251,247,241,.6) 62%,rgba(251,247,241,.92) 72%,rgba(251,247,241,.92) 93%,var(--ivory) 100%)}
@@ -156,8 +154,6 @@
   .arch{position:relative;padding:10px;border:1px solid var(--gold);border-radius:999px 999px 18px 18px;background:linear-gradient(180deg,var(--white),var(--blush));box-shadow:0 40px 60px -40px rgba(60,47,51,.45)}
   .arch::before{content:"";position:absolute;inset:4px;border:1px solid rgba(201,169,110,.45);border-radius:inherit;pointer-events:none}
   .arch .photo{aspect-ratio:4/5;border-radius:999px 999px 10px 10px}
-  .arch .photo img{transform:scale(1.14);transition:transform 2.2s var(--ease)}
-  .rv.in .arch .photo img{transform:scale(1)}
 
   /* =====================================================================
      REVEAL
@@ -252,9 +248,6 @@
   .ev{position:relative;background:var(--white);border-radius:24px;overflow:hidden;box-shadow:0 30px 60px -34px rgba(60,47,51,.45),0 0 0 1px rgba(201,169,110,.35)}
   .ev::before{content:"";position:absolute;left:-30px;top:32px;width:11px;height:11px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px var(--ivory),0 0 0 5px rgba(201,169,110,.5);z-index:1}
   .ev .photo{aspect-ratio:4/3;background:var(--ivory-2)}
-  .ev .photo img{transform:scale(1.08);transition:transform 2s var(--ease)}
-  .ev.in .photo img{transform:scale(1)}
-  .ev:hover .photo img{transform:scale(1.04)}
   .ev .photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(60,47,51,0) 45%,rgba(60,47,51,.62) 100%)}
   .ev .meta{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:1.1rem 1.3rem;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:.6rem 1rem;color:var(--white)}
   .ev .meta h3{font-family:var(--display);font-weight:600;font-size:clamp(1.35rem,5.4vw,1.75rem);line-height:1.15;margin:0;letter-spacing:.02em;text-shadow:0 2px 14px rgba(0,0,0,.35)}
@@ -364,7 +357,6 @@
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
     html.js .rv{opacity:1;transform:none}
-    .arch .photo img,.ev .photo img{transform:none}
     .seal .deity,.seal .wreath .lf,.seal .wreath .bl,.seal-wrap .hindi,.shlok{opacity:1;transform:none}
     .seal .wreath .ring{stroke-dashoffset:0}
   }
