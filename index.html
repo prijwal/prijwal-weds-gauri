@@ -798,64 +798,16 @@
     loader.classList.add('opening');
     if (burstLoader) burstLoader();
     setTimeout(function(){ loader.classList.add('open'); }, t1);
-    setTimeout(function(){ loader.classList.add('gone'); downCue.classList.add('show'); if (!reduce){ hopT = setInterval(hop, 2400); updateSnap(); } }, t2);
+    setTimeout(function(){ loader.classList.add('gone'); downCue.classList.add('show'); if (!reduce){ hopT = setInterval(hop, 2400); } }, t2);
   }
   /* scroll hint: the page hops four times, 2.4s apart, stopping early if the guest scrolls, swipes or scrolls with the wheel */
   var downCue = document.getElementById('downCue'), hopT = null, hops = 0;
   function hop(){ if (++hops > 4){ stopHop(); return; } document.body.classList.remove('hop'); void document.body.offsetWidth; document.body.classList.add('hop'); }
-  function stopHop(){ if (hopT){ clearInterval(hopT); hopT = null; if (typeof updateSnap === 'function') updateSnap(); } }  /* a running hop is left to finish: it ends at 0 */
+  function stopHop(){ if (hopT){ clearInterval(hopT); hopT = null; } }  /* a running hop is left to finish: it ends at 0 */
   ['wheel','touchstart','keydown'].forEach(function(ev){ window.addEventListener(ev, stopHop, {passive: true}); });
   window.addEventListener('scroll', function(){ if (window.scrollY > 40) stopHop(); downCue.classList.toggle('hide', window.scrollY > window.innerHeight * .5); }, {passive: true});
   downCue.addEventListener('click', function(){ stopHop(); document.getElementById('couple').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); });
 
-  /* Page snapping, only on the first three pages (story, couple, Save the date) and only while scrolling down:
-     once the guest has scrolled at least 75% of the way through a page and stops, the page glides on to the next
-     page top. Everything after Save the date scrolls freely.
-     Direction is read from where the page comes to rest compared with where it rested before (restY), never from
-     finger movement: a finger lifting off usually jitters the other way, which used to count an upward swipe as down.
-     Snapping is paused while the page hops. */
-  var snapEls = Array.prototype.slice.call(document.querySelectorAll('#story,#couple,#date')),
-      snapTick = false, snapIdle = null, restY = 0;
-  function snapTarget(){
-    if (hopT || gliding) return -1;
-    var y = window.scrollY;
-    if (y <= restY) return -1;                                           /* not moving down */
-    for (var i = 0; i < snapEls.length - 1; i++){
-      var top = snapEls[i].offsetTop, next = snapEls[i + 1].offsetTop;
-      if (y >= top && y < next){
-        if (y - top < 2 || next - y < 2) return -1;                     /* already on a page top: stay */
-        return (y - top) / (next - top) >= .75 ? next : -1;             /* three quarters through: complete onto the next page */
-      }
-    }
-    return -1;
-  }
-  /* The page glides to the next page top itself, slowly, starting from a standstill (ease in and out) instead of
-     using the browser's snap, which jumps on phones. A touch, wheel or key during the glide cancels it. */
-  var gliding = false;
-  function glideTo(target){
-    var start = window.scrollY, dist = target - start;
-    if (Math.abs(dist) < 2) return;
-    if (reduce){ window.scrollTo(0, target); restY = target; return; }
-    var t0 = performance.now(), dur = Math.min(2000, 1400 + Math.abs(dist) * 1.2);
-    gliding = true;
-    (function step(now){
-      if (!gliding) return;
-      var p = Math.min(1, (now - t0) / dur), e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
-      window.scrollTo(0, start + dist * e);
-      if (p < 1) requestAnimationFrame(step); else { gliding = false; restY = target; }
-    })(t0);
-  }
-  function stopGlide(){ if (gliding){ gliding = false; restY = window.scrollY; } }
-  ['touchstart','wheel','keydown'].forEach(function(ev){ window.addEventListener(ev, stopGlide, {passive: true}); });
-  function updateSnap(){
-    snapTick = false;
-    clearTimeout(snapIdle);
-    if (gliding) return;
-    /* Only once the scroll has settled, so the glide never fights a gesture that is still in progress. */
-    snapIdle = setTimeout(function(){ snapIdle = null; var t = snapTarget(); if (t >= 0) glideTo(t); else restY = window.scrollY; }, 160);
-  }
-  window.addEventListener('scroll', function(){ if (!snapTick){ snapTick = true; requestAnimationFrame(updateSnap); } }, {passive: true});
-  updateSnap();
   if (!reduce) setTimeout(function(){ loader.classList.add('sweep'); }, 2200);
   loader.addEventListener('click', function(){ openInvite(true); });
   loader.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openInvite(true); } });
