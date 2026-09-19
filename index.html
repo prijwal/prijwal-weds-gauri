@@ -116,6 +116,7 @@
      PHOTOS
      ===================================================================== */
   .photo{position:relative;overflow:hidden;background:linear-gradient(160deg,var(--blush),var(--ivory-2))}
+  .photo picture{display:contents}
   .photo img{width:100%;height:100%;object-fit:cover;object-position:var(--focus,50% 35%)}
   .photo.missing img{display:none}
   .photo.missing::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,var(--blush),var(--ivory-2))}
@@ -387,7 +388,7 @@
     </div>
   </div>
   <canvas data-petals="burst" aria-hidden="true"></canvas>
-  <audio id="bgm" loop preload="auto"><source src="audio/kesariya-flute.m4a" type="audio/mp4"><source src="audio/kesariya-flute.mp3" type="audio/mpeg"></audio>
+  <audio id="bgm" loop preload="none"><source src="audio/kesariya-flute.m4a" type="audio/mp4"><source src="audio/kesariya-flute.mp3" type="audio/mpeg"></audio>
   <p class="tap" aria-hidden="true">tap to open</p>
 </div>
 
@@ -396,7 +397,7 @@
 <!-- ============ OPENING — couple-hero.jpg, the story ============ -->
 <section class="scene photo-scene" id="story">
   <div class="backdrop photo" data-label="Couple photo — wedding-photos-v4/couple-hero.jpg" style="--focus:50% 25%">
-    <picture><source media="(max-width: 700px) and (orientation: portrait)" srcset="wedding-photos-v4/couple-hero-m.jpg"><img loading="eager" fetchpriority="high" decoding="async" src="wedding-photos-v4/couple-hero.jpg" alt="Prijwal and Gauri" onerror="this.parentNode.classList.add('missing')"></picture>
+    <picture><source media="(max-width: 700px) and (orientation: portrait)" type="image/webp" srcset="wedding-photos-v4/couple-hero-m.webp"><source type="image/webp" srcset="wedding-photos-v4/couple-hero.webp"><source media="(max-width: 700px) and (orientation: portrait)" srcset="wedding-photos-v4/couple-hero-m.jpg"><img loading="eager" fetchpriority="high" decoding="async" src="wedding-photos-v4/couple-hero.jpg" alt="Prijwal and Gauri" onerror="this.parentNode.classList.add('missing')"></picture>
     <div class="veil"></div>
   </div>
   <canvas class="petals" data-petals="soft" aria-hidden="true"></canvas>
@@ -417,7 +418,7 @@
     <div class="duo rv d1">
       <figure class="who groom">
         <div class="arch">
-          <div class="photo" data-label="Groom — wedding-photos-v4/groom-kid.jpg" style="--focus:50% 30%"><img loading="lazy" decoding="async" src="wedding-photos-v4/groom-kid.jpg" alt="Prijwal as a little boy" onerror="this.parentNode.classList.add('missing')"></div>
+          <div class="photo" data-label="Groom — wedding-photos-v4/groom-kid.jpg" style="--focus:50% 30%"><picture><source type="image/webp" srcset="wedding-photos-v4/groom-kid.webp"><img loading="lazy" decoding="async" src="wedding-photos-v4/groom-kid.jpg" alt="Prijwal as a little boy" onerror="this.parentNode.classList.add('missing')"></picture></div>
         </div>
         <figcaption>
           <span class="role">The groom</span>
@@ -426,7 +427,7 @@
       <div class="knot" aria-hidden="true">&amp;</div>
       <figure class="who bride">
         <div class="arch">
-          <div class="photo" data-label="Bride — wedding-photos-v4/bride-kid.jpg" style="--focus:50% 30%"><img loading="lazy" decoding="async" src="wedding-photos-v4/bride-kid.jpg" alt="Gauri as a little girl" onerror="this.parentNode.classList.add('missing')"></div>
+          <div class="photo" data-label="Bride — wedding-photos-v4/bride-kid.jpg" style="--focus:50% 30%"><picture><source type="image/webp" srcset="wedding-photos-v4/bride-kid.webp"><img loading="lazy" decoding="async" src="wedding-photos-v4/bride-kid.jpg" alt="Gauri as a little girl" onerror="this.parentNode.classList.add('missing')"></picture></div>
         </div>
         <figcaption>
           <span class="role">The bride</span>
@@ -441,7 +442,7 @@
 <!-- ============ SAVE THE DATE ============ -->
 <section class="scene photo-scene" id="date">
   <div class="backdrop photo" data-label="Couple photo — wedding-photos-v4/couple-finale.jpg" style="--focus:50% 30%">
-    <picture><source media="(max-width: 700px) and (orientation: portrait)" srcset="wedding-photos-v4/couple-finale-m.jpg"><img loading="lazy" decoding="async" src="wedding-photos-v4/couple-finale.jpg" alt="" onerror="this.parentNode.classList.add('missing')"></picture>
+    <picture><source media="(max-width: 700px) and (orientation: portrait)" type="image/webp" srcset="wedding-photos-v4/couple-finale-m.webp"><source type="image/webp" srcset="wedding-photos-v4/couple-finale.webp"><source media="(max-width: 700px) and (orientation: portrait)" srcset="wedding-photos-v4/couple-finale-m.jpg"><img loading="lazy" decoding="async" src="wedding-photos-v4/couple-finale.jpg" alt="" onerror="this.parentNode.classList.add('missing')"></picture>
     <div class="veil"></div>
   </div>
   <canvas class="petals" data-petals="soft" aria-hidden="true"></canvas>
@@ -473,7 +474,7 @@
       <div class="day rv">Thursday · 26 November 2026</div>
 
       <article class="ev rv">
-        <div class="photo" data-label="Carnival &amp; haldi photo — wedding-photos-v4/haldi.jpg"><img loading="lazy" decoding="async" src="wedding-photos-v4/haldi.jpg" alt="" onerror="this.parentNode.classList.add('missing')">
+        <div class="photo" data-label="Carnival &amp; haldi photo — wedding-photos-v4/haldi.jpg"><picture><source type="image/webp" srcset="wedding-photos-v4/haldi.webp"><img loading="lazy" decoding="async" src="wedding-photos-v4/haldi.jpg" alt="" onerror="this.parentNode.classList.add('missing')"></picture>
           <div class="meta"><h3>Carnival Party &amp; Haldi</h3><span class="time">7:00 AM</span></div>
         </div>
         <div class="body">
@@ -483,7 +484,7 @@
       </article>
 
       <article class="ev rv">
-        <div class="photo" data-label="Sangeet photo — wedding-photos-v4/sangeet.jpg" style="--focus:50% 60%"><img loading="lazy" decoding="async" src="wedding-photos-v4/sangeet.jpg" alt="" onerror="this.parentNode.classList.add('missing')">
+        <div class="photo" data-label="Sangeet photo — wedding-photos-v4/sangeet.jpg" style="--focus:50% 60%"><picture><source type="image/webp" srcset="wedding-photos-v4/sangeet.webp"><img loading="lazy" decoding="async" src="wedding-photos-v4/sangeet.jpg" alt="" onerror="this.parentNode.classList.add('missing')"></picture>
           <div class="meta"><h3>Sangeet</h3><span class="time">11:00 AM</span></div>
         </div>
         <div class="body">
@@ -493,7 +494,7 @@
       </article>
 
       <article class="ev rv">
-        <div class="photo" data-label="Baraat photo — wedding-photos-v4/baraat.jpg"><img loading="lazy" decoding="async" src="wedding-photos-v4/baraat.jpg" alt="" onerror="this.parentNode.classList.add('missing')">
+        <div class="photo" data-label="Baraat photo — wedding-photos-v4/baraat.jpg"><picture><source type="image/webp" srcset="wedding-photos-v4/baraat.webp"><img loading="lazy" decoding="async" src="wedding-photos-v4/baraat.jpg" alt="" onerror="this.parentNode.classList.add('missing')"></picture>
           <div class="meta"><h3>Baraat</h3><span class="time">8:00 PM</span></div>
         </div>
         <div class="body">
@@ -505,7 +506,7 @@
       <div class="day rv">Friday · 27 November 2026</div>
 
       <article class="ev rv">
-        <div class="photo" data-label="Phere / mandap photo — wedding-photos-v4/phere.jpg"><img loading="lazy" decoding="async" src="wedding-photos-v4/phere.jpg" alt="" onerror="this.parentNode.classList.add('missing')">
+        <div class="photo" data-label="Phere / mandap photo — wedding-photos-v4/phere.jpg"><picture><source type="image/webp" srcset="wedding-photos-v4/phere.webp"><img loading="lazy" decoding="async" src="wedding-photos-v4/phere.jpg" alt="" onerror="this.parentNode.classList.add('missing')"></picture>
           <div class="meta"><h3>Wedding / Phere</h3><span class="time">8:00 AM</span></div>
         </div>
         <div class="body">
@@ -515,7 +516,7 @@
       </article>
 
       <article class="ev rv">
-        <div class="photo" data-label="Vidai photo — wedding-photos-v4/vidai.jpg"><img loading="lazy" decoding="async" src="wedding-photos-v4/vidai.jpg" alt="" onerror="this.parentNode.classList.add('missing')">
+        <div class="photo" data-label="Vidai photo — wedding-photos-v4/vidai.jpg"><picture><source type="image/webp" srcset="wedding-photos-v4/vidai.webp"><img loading="lazy" decoding="async" src="wedding-photos-v4/vidai.jpg" alt="" onerror="this.parentNode.classList.add('missing')"></picture>
           <div class="meta"><h3>Vidai</h3><span class="time">11:00 AM</span></div>
         </div>
         <div class="body">
@@ -534,7 +535,7 @@
   <div class="inner">
     <p class="eyebrow rv">The wedding venue</p>
     <div class="venue-card rv d1">
-      <div class="photo" data-label="Venue photo — wedding-photos-v4/venue.jpg"><img loading="lazy" decoding="async" src="wedding-photos-v4/venue.jpg" alt="Mannat Palace Resort & Banquet" onerror="this.parentNode.classList.add('missing')"></div>
+      <div class="photo" data-label="Venue photo — wedding-photos-v4/venue.jpg"><picture><source type="image/webp" srcset="wedding-photos-v4/venue.webp"><img loading="lazy" decoding="async" src="wedding-photos-v4/venue.jpg" alt="Mannat Palace Resort & Banquet" onerror="this.parentNode.classList.add('missing')"></picture></div>
       <div class="text">
         <h3>Mannat Palace Resort &amp; Banquet</h3>
         <p class="aka">also known as Mannat Garden / Resort</p>
@@ -551,7 +552,7 @@
 <!-- ============ FINALE ============ -->
 <section class="scene photo-scene" id="finale">
   <div class="backdrop photo ken" data-label="Couple photo — wedding-photos-v4/couple-sangeet.jpg" style="--focus:50% 30%">
-    <picture><source media="(max-width: 700px) and (orientation: portrait)" srcset="wedding-photos-v4/couple-sangeet-m.jpg"><img loading="lazy" decoding="async" src="wedding-photos-v4/couple-sangeet.jpg" alt="" onerror="this.parentNode.classList.add('missing')"></picture>
+    <picture><source media="(max-width: 700px) and (orientation: portrait)" type="image/webp" srcset="wedding-photos-v4/couple-sangeet-m.webp"><source type="image/webp" srcset="wedding-photos-v4/couple-sangeet.webp"><source media="(max-width: 700px) and (orientation: portrait)" srcset="wedding-photos-v4/couple-sangeet-m.jpg"><img loading="lazy" decoding="async" src="wedding-photos-v4/couple-sangeet.jpg" alt="" onerror="this.parentNode.classList.add('missing')"></picture>
     <div class="veil"></div>
   </div>
   <canvas class="petals" data-petals="finale" aria-hidden="true"></canvas>
@@ -752,6 +753,19 @@
       fadeT = setInterval(function(){ var p = Math.min(1, Math.max(0, (performance.now() - t0) / (secs * 1000))); bgm.volume = p; if (p >= 1) clearInterval(fadeT); }, 50);
     }
   }
+  /* Loading order: the first screens, then every remaining photo, and only then the track (2.4MB) starts buffering.
+     Playback needs just the first few seconds in hand; the browser streams the rest while it plays. */
+  window.addEventListener('load', function(){
+    var imgs = Array.prototype.slice.call(document.querySelectorAll('img[loading="lazy"]'));
+    var done = imgs.map(function(i){
+      return new Promise(function(res){
+        if (i.complete && i.naturalWidth) return res();
+        i.addEventListener('load', res, {once: true}); i.addEventListener('error', res, {once: true});
+        i.loading = 'eager';   /* start fetching now instead of waiting for the guest to scroll to it */
+      });
+    });
+    Promise.all(done).then(function(){ if (!musicOn){ bgm.preload = 'auto'; bgm.load(); } });
+  });
   /* Must be called directly inside the guest's tap or key press: phones only allow sound to start there. */
   function startMusic(delay){
     if (musicOn || !bgm) return;
