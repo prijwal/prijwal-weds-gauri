@@ -135,7 +135,7 @@
   .scene.photo-scene .inner{padding-top:34vh}
   #finale{align-items:end;padding-bottom:2rem}
   #finale .inner{padding-top:0;padding-bottom:0;gap:1.1rem}
-  #story .inner{padding-top:50vh}
+  #story .inner{padding-top:min(50vh, calc(100vh - 500px));padding-top:min(50vh, calc(100svh - 500px))}
   /* bouncing down-arrow cue; shown once the gates are open, hidden once the guest has scrolled */
   .down{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:4;width:44px;height:44px;margin-left:-22px;padding:0;border:1px solid rgba(201,169,110,.7);border-radius:50%;background:rgba(251,247,241,.85);color:var(--gold-deep);display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .8s ease;animation:bob 1.6s ease-in-out infinite}
   .down svg{width:20px;height:20px}
@@ -163,20 +163,16 @@
   /* =====================================================================
      LOADER — ivory garden gates
      ===================================================================== */
-  #loader{position:fixed;inset:0;z-index:100;background:var(--ivory);perspective:1500px;perspective-origin:50% 50%;overflow:hidden;transition:opacity .9s ease,visibility .9s}
+  #loader{position:fixed;inset:0;z-index:100;background:var(--ivory);perspective:2200px;perspective-origin:50% 50%;overflow:hidden;transition:opacity .9s ease,visibility .9s}
   #loader.gone{opacity:0;visibility:hidden;pointer-events:none}
-  .door{position:absolute;top:0;bottom:0;width:50.5%;background:var(--linen),linear-gradient(180deg,var(--white),var(--ivory) 50%,var(--ivory-2));transition:transform 2.1s var(--ease-door);backface-visibility:hidden;box-shadow:0 0 80px rgba(60,47,51,.18)}
-  .door.l{left:0;transform-origin:left center;border-right:1px solid var(--gold)}
-  .door.r{right:0;transform-origin:right center;border-left:1px solid var(--gold)}
+  /* One full-width door hinged on the left, so Ganesh ji on it is never split */
+  .door{position:absolute;top:0;bottom:0;left:0;width:100%;transform-origin:left center;border-right:1px solid var(--gold);background:var(--linen),linear-gradient(180deg,var(--white),var(--ivory) 50%,var(--ivory-2));transition:transform 2.1s var(--ease-door);backface-visibility:hidden;box-shadow:0 0 80px rgba(60,47,51,.18)}
   .door::before{content:"";position:absolute;inset:22px;border:1px solid rgba(201,169,110,.7)}
-  .door::after{content:"";position:absolute;top:44px;bottom:44px;width:120px;background:var(--slats);opacity:.6}
-  .door.l::after{right:0}.door.r::after{left:0}
-  #loader.open .door.l{transform:rotateY(-110deg)}
-  #loader.open .door.r{transform:rotateY(110deg)}
+  .door::after{content:"";position:absolute;top:44px;bottom:44px;right:0;width:120px;background:var(--slats);opacity:.6}
+  #loader.open .door{transform:rotateY(-100deg)}
   #loader canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
   .seal-wrap{position:absolute;inset:0;z-index:4;display:grid;place-items:center;text-align:center;padding:24px;transition:opacity .8s ease,transform .9s var(--ease)}
-  .seal-wrap > div{display:grid;gap:2.6rem;justify-items:center}
-  #loader.opening .seal-wrap{opacity:0;transform:scale(1.14);pointer-events:none}
+  .seal-wrap > div{display:grid;gap:1.6rem;justify-items:center}
   .seal{position:relative;width:min(64vw,260px);height:min(64vw,260px);border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 40% 30%,var(--white),var(--blush) 75%);border:1px solid var(--gold);box-shadow:0 0 0 10px var(--ivory),0 0 0 11px rgba(201,169,110,.6),0 40px 80px -30px rgba(60,47,51,.35);animation:seal-in 1.4s var(--ease) both}
   @keyframes seal-in{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
   .seal .wreath{position:absolute;inset:-20%;width:140%;height:140%;animation:spin 90s linear infinite;pointer-events:none}
@@ -184,13 +180,12 @@
   .seal .wreath .lf,.seal .wreath .bl{opacity:0;animation:fade 1s var(--ease) forwards;animation-delay:var(--d)}
   @keyframes draw{to{stroke-dashoffset:0}}
   @keyframes fade{to{opacity:1}}
-  .seal .mono{position:relative;font-family:var(--script);font-size:clamp(4.2rem,20vw,6.6rem);line-height:1;color:var(--rose-deep);background:linear-gradient(100deg,var(--rose-deep) 0 38%,#EBCF95 50%,var(--rose-deep) 62% 100%);background-size:320% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;opacity:0;animation:mono-in 1.3s .5s var(--ease) forwards,sheen 1.8s 1.7s ease-in-out forwards}
-  .seal .mono span{font-size:.45em;position:relative;top:-.15em;margin:0 .05em}
+  .seal picture{display:contents}
+  .seal .deity{position:relative;height:80%;width:auto;display:block;opacity:0;animation:mono-in 1.3s .5s var(--ease) forwards}
   @keyframes mono-in{from{opacity:0;transform:scale(.82) translateY(8px)}to{opacity:1;transform:none}}
-  @keyframes sheen{to{background-position:0 0}}
   @keyframes spin{to{transform:rotate(360deg)}}
   .seal-wrap .hindi{opacity:0;animation:fade-up 1.2s .3s var(--ease) forwards}
-  .seal-wrap .eyebrow{opacity:0;animation:fade-up 1.2s 1.9s var(--ease) forwards}
+  .shlok{font-family:var(--hindi);font-size:clamp(.98rem,3.9vw,1.15rem);line-height:1.8;color:var(--ink);margin:0;max-width:32ch;opacity:0;animation:fade-up 1.2s 1.4s var(--ease) forwards}
   .door .sheen{position:absolute;inset:0;background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.75) 50%,transparent 58%);background-size:260% 100%;background-position:120% 0;pointer-events:none}
   #loader.sweep .door .sheen{animation:sweep 1.5s ease-in-out forwards}
   @keyframes sweep{to{background-position:-60% 0}}
@@ -201,8 +196,8 @@
   /* =====================================================================
      SAVE THE DATE
      ===================================================================== */
-  #story .story{font-size:clamp(1.4rem,5.2vw,1.9rem);font-weight:600;font-style:italic;line-height:1.4;max-width:32ch;margin:0 auto;color:var(--ink)}
-  #story .story mark{background:none;color:var(--sage-deep);font-style:normal;font-weight:600}
+  #story .story{font-size:clamp(1.35rem,5vw,1.8rem);font-weight:500;font-style:italic;line-height:1.45;letter-spacing:.01em;max-width:32ch;margin:0 auto;color:var(--ink);text-shadow:0 1px 14px rgba(251,247,241,.85)}
+  #story .story mark{display:block;margin-top:.4em;background:none;font-family:var(--script);font-style:normal;font-weight:400;font-size:1.38em;line-height:1.25;letter-spacing:0;color:var(--rose-deep)}
   #date .big{font-family:var(--display);font-weight:600;font-size:clamp(1.7rem,7.4vw,3rem);letter-spacing:.08em;line-height:1.2;margin:0}
   #date .big small{display:block;font-family:var(--sans);font-size:.42em;letter-spacing:.36em;font-weight:600;color:var(--sage-deep);margin-bottom:.7em;text-transform:uppercase;-webkit-text-fill-color:var(--sage-deep)}
   #date .couple{font-family:var(--script);font-size:clamp(2.6rem,11vw,4.2rem);color:var(--rose-deep);line-height:1.1}
@@ -313,10 +308,11 @@
     .garland{height:64px}
     .door::after{width:56px}
     .seal{width:min(60vw,230px);height:min(60vw,230px)}
+    .seal-wrap > div{gap:1.3rem}
     .backdrop .veil,#finale .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,.92) 0%,rgba(251,247,241,0) 14%,rgba(251,247,241,0) 30%,rgba(251,247,241,.72) 46%,rgba(251,247,241,.97) 60%,var(--ivory) 100%)}
     .backdrop{inset:0;transform:none}
     .scene.photo-scene .inner{padding-top:44vh}
-    #story .inner{padding-top:min(56vh, calc(100vh - 430px));padding-top:min(56vh, calc(100svh - 430px));padding-bottom:4rem}
+    #story .inner{padding-top:min(56vh, calc(100vh - 460px));padding-top:min(56vh, calc(100svh - 460px));padding-bottom:2.6rem;gap:1.1rem}
     #finale .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,0) 0%,rgba(251,247,241,0) 60%,rgba(251,247,241,.75) 67%,rgba(251,247,241,.95) 75%,var(--ivory) 100%)}
     #finale .backdrop img{object-position:2% 30%} /* the couple stand left of centre in the portrait crop */
     #story .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,0) 0%,rgba(251,247,241,.55) 70%,rgba(251,247,241,.9) 80%,rgba(251,247,241,.9) 93%,var(--ivory) 100%)}
@@ -347,6 +343,10 @@
     .foot .dot{display:none}
   }
 
+  @media (max-height:640px){
+    .seal{width:min(48vw,190px);height:min(48vw,190px)}
+    .seal-wrap > div{gap:1rem}
+  }
   /* Short phone viewports (browser toolbars showing): keep Meet the couple on one screen */
   @media (max-width:600px) and (max-height:760px){
     #couple{padding-top:calc(1.4rem + env(safe-area-inset-top,0px));padding-bottom:1.4rem}
@@ -358,7 +358,7 @@
     *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
     html.js .rv{opacity:1;transform:none}
     .arch .photo img,.ev .photo img{transform:none}
-    .seal .mono,.seal .wreath .lf,.seal .wreath .bl,.seal-wrap .hindi,.seal-wrap .eyebrow{opacity:1;transform:none}
+    .seal .deity,.seal .wreath .lf,.seal .wreath .bl,.seal-wrap .hindi,.shlok{opacity:1;transform:none}
     .seal .wreath .ring{stroke-dashoffset:0}
   }
 </style>
@@ -374,20 +374,21 @@
 
 <!-- ============ LOADER — ivory gates ============ -->
 <div id="loader" role="button" tabindex="0" aria-label="Opening the invitation — tap to open now">
-  <div class="door l" aria-hidden="true"><i class="sheen"></i></div>
-  <div class="door r" aria-hidden="true"><i class="sheen"></i></div>
-  <canvas data-petals="burst" aria-hidden="true"></canvas>
-  <p class="tap" aria-hidden="true">tap to open</p>
-  <div class="seal-wrap">
-    <div>
-      <p class="hindi" lang="hi">॥ श्री गणेशाय नमः ॥</p>
-      <div class="seal">
-        <svg class="wreath" viewBox="0 0 300 300" aria-hidden="true"></svg>
-        <div class="mono">P<span>&amp;</span>G</div>
+  <div class="door" aria-hidden="true">
+    <i class="sheen"></i>
+    <div class="seal-wrap">
+      <div>
+        <p class="hindi" lang="hi">॥ श्री गणेशाय नमः ॥</p>
+        <div class="seal">
+          <svg class="wreath" viewBox="0 0 300 300" aria-hidden="true"></svg>
+          <picture><source type="image/webp" srcset="wedding-photos-v4/ganesh.webp"><img class="deity" src="wedding-photos-v4/ganesh.png" alt="Lord Ganesha" width="706" height="900" decoding="async"></picture>
+        </div>
+        <p class="shlok" lang="hi">वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ ।<br>निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥</p>
       </div>
-      <p class="eyebrow">Prijwal &nbsp;·&nbsp; Gauri</p>
     </div>
   </div>
+  <canvas data-petals="burst" aria-hidden="true"></canvas>
+  <p class="tap" aria-hidden="true">tap to open</p>
 </div>
 
 <!-- ============ OPENING — couple-hero.jpg, the story ============ -->
@@ -599,7 +600,7 @@
     for (var k = 0; k < 5; k++) s += '<circle cx="' + (x + Math.cos(k*1.2566)*r*.62).toFixed(1) + '" cy="' + (y + Math.sin(k*1.2566)*r*.62).toFixed(1) + '" r="' + (r*.5).toFixed(1) + '" fill="' + col + '"/>';
     return s + '<circle cx="' + x + '" cy="' + y + '" r="' + (r*.28).toFixed(1) + '" fill="#E7D2A4"/>';
   }
-  // Wreath around the monogram: a ring of leaves with small blossoms
+  // Wreath around the seal: a ring of leaves with small blossoms
   (function wreath(){
     var svg = document.querySelector('.wreath'); if (!svg) return;
     var cx = 150, cy = 150, R = 118, s = '<circle class="ring" cx="150" cy="150" r="' + R + '" fill="none" stroke="#C9A96E" stroke-opacity=".5" stroke-width="1"/>';
@@ -669,7 +670,7 @@
   }
 
   /* ---------- Petals (canvas) ----------
-     data-petals="burst"  → a shower from the monogram when the gates open
+     data-petals="burst"  → a shower from the seal when the door opens
      data-petals="soft"   → a few petals drifting down
      data-petals="finale" → a fuller shower */
   var PET = ['#F6DEE2','#EFC9D0','#E9AFB9','#FFFFFF','#F3D3D9'];
@@ -715,8 +716,8 @@
   });
 
   /* ---------- Opening sequence ----------
-     seal and wreath draw in → monogram shimmers → light sweeps the gates →
-     petals burst, gates swing open and the invitation is revealed.
+     seal and wreath draw in → Ganesh ji and the shlok appear → light sweeps the door →
+     petals burst, the door swings open and the invitation is revealed.
      A tap anywhere skips ahead. */
   var loader = document.getElementById('loader'), opened = false, autoT;
   function openInvite(fast){
