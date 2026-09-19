@@ -735,8 +735,12 @@
      because iPhones ignore the volume property).
      Phones refuse sound without a touch: if the gate opened on its own, the first touch, click, key or scroll starts it instead.
      The sound button shows the bars dancing while the music plays and mutes on tap. */
-  var bgm = document.getElementById('bgm'), soundBtn = document.getElementById('soundBtn'), musicOn = false, actx = null, gainNode = null, fadeT = null;
+  var bgm = document.getElementById('bgm'), soundBtn = document.getElementById('soundBtn'), musicOn = false, actx = null, gainNode = null, fadeT = null,
+      /* iPhones and iPads: audio routed through Web Audio is silenced by the ringer switch, and the volume property is ignored,
+         so there the plain element plays directly and comes in at full volume. */
+      iOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   function setupGain(){
+    if (iOS) return;
     try {
       var AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return;
@@ -746,24 +750,26 @@
     } catch (e) { actx = null; gainNode = null; }
   }
   var DOOR_SECS = 2.1;   /* matches the door's transition in the CSS */
-  function fadeIn(secs){
+  /* Volume rises from 0 to full over `secs`, starting after `delay` seconds (the moment the door starts to swing). */
+  function fadeIn(secs, delay){
     if (gainNode){
       var now = actx.currentTime;
-      gainNode.gain.cancelScheduledValues(now); gainNode.gain.setValueAtTime(0, now); gainNode.gain.linearRampToValueAtTime(1, now + secs);
-    } else {
-      bgm.volume = 0; var t0 = performance.now(); clearInterval(fadeT);
-      fadeT = setInterval(function(){ var p = Math.min(1, (performance.now() - t0) / (secs * 1000)); bgm.volume = p; if (p >= 1) clearInterval(fadeT); }, 50);
+      gainNode.gain.cancelScheduledValues(now); gainNode.gain.setValueAtTime(0, now); gainNode.gain.setValueAtTime(0, now + delay); gainNode.gain.linearRampToValueAtTime(1, now + delay + secs);
+    } else if (!iOS){
+      bgm.volume = 0; var t0 = performance.now() + delay * 1000; clearInterval(fadeT);
+      fadeT = setInterval(function(){ var p = Math.min(1, Math.max(0, (performance.now() - t0) / (secs * 1000))); bgm.volume = p; if (p >= 1) clearInterval(fadeT); }, 50);
     }
   }
-  function startMusic(){
+  /* Must be called directly inside the guest's tap or key press: phones only allow sound to start there. */
+  function startMusic(delay){
     if (musicOn || !bgm) return;
     if (!actx) setupGain();
     if (actx && actx.state === 'suspended') actx.resume();
     var p = bgm.play();
-    if (p && p.then){ p.then(function(){ musicOn = true; fadeIn(DOOR_SECS); soundBtn.classList.remove('off'); }).catch(function(){}); }
-    else { musicOn = true; fadeIn(DOOR_SECS); soundBtn.classList.remove('off'); }
+    function on(){ musicOn = true; fadeIn(DOOR_SECS, delay || 0); soundBtn.classList.remove('off'); }
+    if (p && p.then){ p.then(on).catch(function(){}); } else { on(); }
   }
-  ['touchstart','pointerdown','click','keydown','wheel'].forEach(function(ev){ window.addEventListener(ev, startMusic, {passive: true}); });
+  ['touchstart','pointerdown','click','keydown','wheel'].forEach(function(ev){ window.addEventListener(ev, function(){ startMusic(0); }, {passive: true}); });
   soundBtn.addEventListener('click', function(e){
     e.stopPropagation();
     if (!musicOn){ startMusic(); return; }
@@ -774,10 +780,11 @@
   });
   function openInvite(fast){
     if (opened) return; opened = true;
+    var t1 = reduce ? 0 : (fast ? 200 : 550), t2 = reduce ? 50 : t1 + 2300;
+    startMusic(t1 / 1000);   /* inside the tap itself; the volume rise is timed to begin with the door */
     loader.classList.add('opening');
     if (burstLoader) burstLoader();
-    var t1 = reduce ? 0 : (fast ? 200 : 550), t2 = reduce ? 50 : t1 + 2300;
-    setTimeout(function(){ loader.classList.add('open'); startMusic(); }, t1);   /* music starts with the door and rises as it opens */
+    setTimeout(function(){ loader.classList.add('open'); }, t1);
     setTimeout(function(){ loader.classList.add('gone'); downCue.classList.add('show'); if (!reduce){ hopT = setInterval(hop, 2400); updateSnap(); } }, t2);
   }
   /* scroll hint: the page hops four times, 2.4s apart, stopping early if the guest scrolls, swipes or scrolls with the wheel */
