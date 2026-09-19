@@ -56,8 +56,6 @@
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  html.snap{scroll-snap-type:y mandatory}
-  #story,#couple,#date,#events,#venue,#finale,#contact{scroll-snap-align:start;scroll-snap-stop:always}
   body{background:var(--ivory);color:var(--ink);font-family:var(--body);font-size:20px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   ::selection{background:var(--blush-2);color:var(--rosewood)}
   a{color:inherit}
@@ -736,20 +734,51 @@
   window.addEventListener('scroll', function(){ if (window.scrollY > 40) stopHop(); downCue.classList.toggle('hide', window.scrollY > window.innerHeight * .5); }, {passive: true});
   downCue.addEventListener('click', function(){ stopHop(); document.getElementById('couple').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); });
 
-  /* Page snapping, only while scrolling down, in two zones: the first three pages, and again from the venue page to the end.
-     The long events page in between scrolls freely, because mandatory snapping would keep pulling it to the nearest page top.
+  /* Page snapping, only while scrolling down: once the guest has scrolled down from a page top, the page
+     glides on to the next page top. The long events page is the exception: it scrolls freely and pulls
+     onto the venue page once that is half on screen.
      Scrolling up never snaps: phones snap to the next page in the direction of the flick, so a small upward nudge
-     from the venue would otherwise fly to the top of the events page. Snapping is also paused while the page hops. */
-  var eventsEl = document.getElementById('events'), venueEl = document.getElementById('venue'), snapTick = false, snapIdle = null, scrollingUp = false, touchY = null;
-  function wantSnap(){ var y = window.scrollY, ih = window.innerHeight; return !hopT && !scrollingUp && (y < eventsEl.offsetTop - ih * .6 || y > venueEl.offsetTop - ih * .5); }
+     would otherwise fly a whole page up. Snapping is also paused while the page hops. */
+  var snapEls = Array.prototype.slice.call(document.querySelectorAll('#story,#couple,#date,#events,#venue,#finale,#contact')),
+      snapTick = false, snapIdle = null, scrollingUp = false, touchY = null;
+  function snapTarget(){
+    if (hopT || scrollingUp || gliding) return -1;
+    var y = window.scrollY, ih = window.innerHeight;
+    for (var i = 0; i < snapEls.length - 1; i++){
+      var top = snapEls[i].offsetTop, next = snapEls[i + 1].offsetTop;
+      if (y >= top && y < next){
+        var span = next - top, remaining = next - y;
+        if (remaining < 2 || y - top < 2) return -1;                     /* already on a page top: stay */
+        if (span > ih * 1.5) return remaining <= ih * .5 ? next : -1;   /* long page (events): pull to the venue once it is half visible */
+        return next;                                                     /* ordinary page: complete onto the next page */
+      }
+    }
+    return -1;
+  }
+  /* The page glides to the next page top itself, slowly and eased, instead of using the browser's snap, which jumps on phones.
+     A touch, wheel or key during the glide cancels it. */
+  var gliding = false;
+  function glideTo(target){
+    var start = window.scrollY, dist = target - start;
+    if (Math.abs(dist) < 2) return;
+    if (reduce){ window.scrollTo(0, target); return; }
+    var t0 = performance.now(), dur = Math.min(1600, 900 + Math.abs(dist) * 1.2);
+    gliding = true;
+    (function step(now){
+      if (!gliding) return;
+      var p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      window.scrollTo(0, start + dist * e);
+      if (p < 1) requestAnimationFrame(step); else gliding = false;
+    })(t0);
+  }
+  function stopGlide(){ gliding = false; }
+  ['touchstart','wheel','keydown'].forEach(function(ev){ window.addEventListener(ev, stopGlide, {passive: true}); });
   function updateSnap(){
     snapTick = false;
-    var html = document.documentElement;
-    if (!wantSnap()){ clearTimeout(snapIdle); snapIdle = null; html.classList.remove('snap'); return; }
-    if (html.classList.contains('snap')) return;
-    /* Switch snapping on only once the scroll has settled: changing scroll-snap-type mid-gesture makes browsers jump, which reads as a flicker. */
     clearTimeout(snapIdle);
-    snapIdle = setTimeout(function(){ snapIdle = null; if (wantSnap()) html.classList.add('snap'); }, 160);
+    if (gliding) return;
+    /* Only once the scroll has settled, so the glide never fights a gesture that is still in progress. */
+    snapIdle = setTimeout(function(){ snapIdle = null; var t = snapTarget(); if (t >= 0) glideTo(t); }, 160);
   }
   /* Direction comes from the gesture itself, not from scroll position: the browser's own snap animation
      can move the page upward, and that must not count as the guest scrolling up. */
