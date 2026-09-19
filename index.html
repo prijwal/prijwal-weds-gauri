@@ -57,7 +57,7 @@
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   html.snap{scroll-snap-type:y mandatory}
-  #story,#couple,#date,#events{scroll-snap-align:start;scroll-snap-stop:always}
+  #story,#couple,#date,#events,#venue,#finale,#contact{scroll-snap-align:start;scroll-snap-stop:always}
   body{background:var(--ivory);color:var(--ink);font-family:var(--body);font-size:20px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   ::selection{background:var(--blush-2);color:var(--rosewood)}
   a{color:inherit}
@@ -736,10 +736,20 @@
   window.addEventListener('scroll', function(){ if (window.scrollY > 40) stopHop(); downCue.classList.toggle('hide', window.scrollY > window.innerHeight * .5); }, {passive: true});
   downCue.addEventListener('click', function(){ stopHop(); document.getElementById('couple').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); });
 
-  /* Page snapping for the first three pages only: the events page below is long and scrolls freely.
-     Mandatory snapping always pulls to the nearest snap point, so it is switched off once the guest is into the events page. */
-  var eventsEl = document.getElementById('events'), snapTick = false;
-  function updateSnap(){ snapTick = false; document.documentElement.classList.toggle('snap', !hopT && window.scrollY < eventsEl.offsetTop - window.innerHeight * .6); }
+  /* Page snapping in two zones: the first three pages, and again from the venue page to the end.
+     The long events page in between scrolls freely, because mandatory snapping would keep pulling it to the nearest page top.
+     Snapping is also paused while the page hops, since the hop transform would otherwise trigger a re-snap. */
+  var eventsEl = document.getElementById('events'), venueEl = document.getElementById('venue'), snapTick = false, snapIdle = null;
+  function wantSnap(){ var y = window.scrollY, ih = window.innerHeight; return !hopT && (y < eventsEl.offsetTop - ih * .6 || y > venueEl.offsetTop - ih * .5); }
+  function updateSnap(){
+    snapTick = false;
+    var html = document.documentElement;
+    if (!wantSnap()){ clearTimeout(snapIdle); snapIdle = null; html.classList.remove('snap'); return; }
+    if (html.classList.contains('snap')) return;
+    /* Switch snapping on only once the scroll has settled: changing scroll-snap-type mid-gesture makes browsers jump, which reads as a flicker. */
+    clearTimeout(snapIdle);
+    snapIdle = setTimeout(function(){ snapIdle = null; if (wantSnap()) html.classList.add('snap'); }, 160);
+  }
   window.addEventListener('scroll', function(){ if (!snapTick){ snapTick = true; requestAnimationFrame(updateSnap); } }, {passive: true});
   updateSnap();
   if (!reduce) setTimeout(function(){ loader.classList.add('sweep'); }, 2200);
