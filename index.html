@@ -135,6 +135,14 @@
   #finale .inner{padding-top:0;padding-bottom:0;gap:1.1rem}
   #story .inner{padding-top:min(50vh, calc(100vh - 500px));padding-top:min(50vh, calc(100svh - 500px))}
   /* bouncing down-arrow cue; shown once the gates are open, hidden once the guest has scrolled */
+  /* Sound button: four bars that dance while the music plays; tapping mutes */
+  .sound{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:101;width:44px;height:44px;padding:0;border:1px solid rgba(201,169,110,.7);border-radius:50%;background:rgba(251,247,241,.92);display:flex;align-items:flex-end;justify-content:center;gap:3px;padding-bottom:13px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .6s ease;box-shadow:0 8px 20px -10px rgba(60,47,51,.45);-webkit-tap-highlight-color:transparent}
+  .sound.show{opacity:1;pointer-events:auto}
+  .sound i{display:block;width:3px;height:6px;border-radius:2px;background:var(--sage-deep);animation:eq 1.1s ease-in-out infinite}
+  .sound i:nth-child(2){animation-delay:-.35s}.sound i:nth-child(3){animation-delay:-.7s}.sound i:nth-child(4){animation-delay:-.2s}
+  @keyframes eq{0%,100%{height:5px}50%{height:16px}}
+  .sound.off i{animation:none;height:5px;opacity:.5}
+  .sound.off::after{content:"";position:absolute;left:11px;top:21px;width:22px;height:1.5px;background:var(--rose-deep);transform:rotate(-45deg)}
   .down{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:4;width:44px;height:44px;margin-left:-22px;padding:0;border:1px solid rgba(201,169,110,.7);border-radius:50%;background:rgba(251,247,241,.85);color:var(--gold-deep);display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .8s ease;animation:bob 1.6s ease-in-out infinite}
   .down svg{width:20px;height:20px}
   .down.show{opacity:1}
@@ -187,7 +195,8 @@
   .door .sheen{position:absolute;inset:0;background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.75) 50%,transparent 58%);background-size:260% 100%;background-position:120% 0;pointer-events:none}
   #loader.sweep .door .sheen{animation:sweep 1.5s ease-in-out forwards}
   @keyframes sweep{to{background-position:-60% 0}}
-  .tap{position:absolute;left:0;right:0;bottom:calc(28px + env(safe-area-inset-bottom,0px));z-index:5;margin:0;text-align:center;font-family:var(--sans);font-weight:500;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft);opacity:0;animation:fade-up .8s 1s var(--ease) forwards;pointer-events:none}
+  .tap{position:absolute;left:0;right:0;bottom:calc(28px + env(safe-area-inset-bottom,0px));z-index:5;margin:0;text-align:center;font-family:var(--sans);font-weight:500;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft);opacity:0;animation:fade-up .8s 1s var(--ease) forwards,tap-pulse 2.4s 2s ease-in-out infinite;pointer-events:none}
+  @keyframes tap-pulse{0%,100%{opacity:1}50%{opacity:.45}}
   #loader.opening .tap{opacity:0;animation:none}
   @keyframes fade-up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
@@ -386,8 +395,11 @@
     </div>
   </div>
   <canvas data-petals="burst" aria-hidden="true"></canvas>
+  <audio id="bgm" loop preload="auto"><source src="audio/kesariya-flute.m4a" type="audio/mp4"><source src="audio/kesariya-flute.mp3" type="audio/mpeg"></audio>
   <p class="tap" aria-hidden="true">tap to open</p>
 </div>
+
+<button class="sound off show" id="soundBtn" type="button" aria-label="Mute music" aria-pressed="false"><i></i><i></i><i></i><i></i></button>
 
 <!-- ============ OPENING — couple-hero.jpg, the story ============ -->
 <section class="scene photo-scene" id="story">
@@ -716,14 +728,56 @@
   /* ---------- Opening sequence ----------
      seal and wreath draw in → Ganesh ji and the shlok appear → light sweeps the door →
      petals burst, the door swings open and the invitation is revealed.
-     A tap anywhere skips ahead. */
-  var loader = document.getElementById('loader'), opened = false, autoT;
+     The gate opens only on a tap: that tap is what lets phones start the music. */
+  var loader = document.getElementById('loader'), opened = false;
+  /* Background music: a flute cover of Kesariya, trimmed to 0:29–3:56 and looped. It starts as the door begins to swing
+     and its volume rises with the door, reaching full when the door is fully open (through a Web Audio gain node,
+     because iPhones ignore the volume property).
+     Phones refuse sound without a touch: if the gate opened on its own, the first touch, click, key or scroll starts it instead.
+     The sound button shows the bars dancing while the music plays and mutes on tap. */
+  var bgm = document.getElementById('bgm'), soundBtn = document.getElementById('soundBtn'), musicOn = false, actx = null, gainNode = null, fadeT = null;
+  function setupGain(){
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      actx = new AC();
+      gainNode = actx.createGain(); gainNode.gain.value = 0.0001;
+      actx.createMediaElementSource(bgm).connect(gainNode); gainNode.connect(actx.destination);
+    } catch (e) { actx = null; gainNode = null; }
+  }
+  var DOOR_SECS = 2.1;   /* matches the door's transition in the CSS */
+  function fadeIn(secs){
+    if (gainNode){
+      var now = actx.currentTime;
+      gainNode.gain.cancelScheduledValues(now); gainNode.gain.setValueAtTime(0, now); gainNode.gain.linearRampToValueAtTime(1, now + secs);
+    } else {
+      bgm.volume = 0; var t0 = performance.now(); clearInterval(fadeT);
+      fadeT = setInterval(function(){ var p = Math.min(1, (performance.now() - t0) / (secs * 1000)); bgm.volume = p; if (p >= 1) clearInterval(fadeT); }, 50);
+    }
+  }
+  function startMusic(){
+    if (musicOn || !bgm) return;
+    if (!actx) setupGain();
+    if (actx && actx.state === 'suspended') actx.resume();
+    var p = bgm.play();
+    if (p && p.then){ p.then(function(){ musicOn = true; fadeIn(DOOR_SECS); soundBtn.classList.remove('off'); }).catch(function(){}); }
+    else { musicOn = true; fadeIn(DOOR_SECS); soundBtn.classList.remove('off'); }
+  }
+  ['touchstart','pointerdown','click','keydown','wheel'].forEach(function(ev){ window.addEventListener(ev, startMusic, {passive: true}); });
+  soundBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    if (!musicOn){ startMusic(); return; }
+    bgm.muted = !bgm.muted;
+    soundBtn.classList.toggle('off', bgm.muted);
+    soundBtn.setAttribute('aria-pressed', bgm.muted ? 'true' : 'false');
+    soundBtn.setAttribute('aria-label', bgm.muted ? 'Unmute music' : 'Mute music');
+  });
   function openInvite(fast){
-    if (opened) return; opened = true; clearTimeout(autoT);
+    if (opened) return; opened = true;
     loader.classList.add('opening');
     if (burstLoader) burstLoader();
     var t1 = reduce ? 0 : (fast ? 200 : 550), t2 = reduce ? 50 : t1 + 2300;
-    setTimeout(function(){ loader.classList.add('open'); }, t1);
+    setTimeout(function(){ loader.classList.add('open'); startMusic(); }, t1);   /* music starts with the door and rises as it opens */
     setTimeout(function(){ loader.classList.add('gone'); downCue.classList.add('show'); if (!reduce){ hopT = setInterval(hop, 2400); updateSnap(); } }, t2);
   }
   /* scroll hint: the page hops four times, 2.4s apart, stopping early if the guest scrolls, swipes or scrolls with the wheel */
@@ -796,7 +850,6 @@
   window.addEventListener('scroll', function(){ if (!snapTick){ snapTick = true; requestAnimationFrame(updateSnap); } }, {passive: true});
   updateSnap();
   if (!reduce) setTimeout(function(){ loader.classList.add('sweep'); }, 2200);
-  autoT = setTimeout(function(){ openInvite(false); }, reduce ? 100 : 3500);
   loader.addEventListener('click', function(){ openInvite(true); });
   loader.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openInvite(true); } });
 
