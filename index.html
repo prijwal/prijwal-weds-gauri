@@ -159,8 +159,8 @@
   /* =====================================================================
      REVEAL
      ===================================================================== */
-  html.js .rv{opacity:0;transform:translateY(30px);transition:opacity 1.2s var(--ease),transform 1.2s var(--ease)}
-  html.js .rv.in{opacity:1;transform:none}
+  html.js .rv{opacity:0;transition:opacity .9s var(--ease)}  /* fade only: nothing moves after it has rendered */
+  html.js .rv.in{opacity:1}
   html.js .rv.d1{transition-delay:.15s} html.js .rv.d2{transition-delay:.32s} html.js .rv.d3{transition-delay:.5s} html.js .rv.d4{transition-delay:.7s} html.js .rv.d5{transition-delay:.9s}
 
   /* =====================================================================
@@ -192,7 +192,8 @@
   .door .sheen{position:absolute;inset:0;background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.75) 50%,transparent 58%);background-size:260% 100%;background-position:120% 0;pointer-events:none}
   #loader.sweep .door .sheen{animation:sweep 1.5s ease-in-out forwards}
   @keyframes sweep{to{background-position:-60% 0}}
-  .tap{position:absolute;left:0;right:0;bottom:calc(28px + env(safe-area-inset-bottom,0px));z-index:5;margin:0;text-align:center;font-family:var(--sans);font-weight:500;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft);opacity:0;animation:fade-up .8s 1s var(--ease) forwards,tap-pulse 2.4s 2s ease-in-out infinite;pointer-events:none}
+  .tap{position:absolute;left:0;right:0;bottom:calc(28px + env(safe-area-inset-bottom,0px));z-index:5;margin:0;text-align:center;font-family:var(--sans);font-weight:500;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft);opacity:0;pointer-events:none}
+  #loader.ready .tap{animation:fade-up .8s 1s var(--ease) forwards,tap-pulse 2.4s 2s ease-in-out infinite}  /* shown once the web fonts are in, so no text changes size after the gate */
   @keyframes tap-pulse{0%,100%{opacity:1}50%{opacity:.45}}
   #loader.opening .tap{opacity:0;animation:none}
   @keyframes fade-up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
@@ -311,7 +312,7 @@
     .seal{width:min(60vw,230px);height:min(60vw,230px)}
     .seal-wrap > div{gap:1.3rem}
     .backdrop .veil,#finale .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,.92) 0%,rgba(251,247,241,0) 14%,rgba(251,247,241,0) 30%,rgba(251,247,241,.72) 46%,rgba(251,247,241,.97) 60%,var(--ivory) 100%)}
-    .backdrop{inset:0;transform:none}
+    .backdrop{inset:0;transform:none;will-change:auto}  /* no parallax on phones, so no promoted photo layers */
     .scene.photo-scene .inner{padding-top:44vh}
     #story .inner{padding-top:min(56vh, calc(100vh - 460px));padding-top:min(56vh, calc(100svh - 460px));padding-bottom:2.6rem;gap:1.1rem}
     #finale .backdrop .veil{background:linear-gradient(180deg,rgba(251,247,241,0) 0%,rgba(251,247,241,0) 60%,rgba(251,247,241,.75) 67%,rgba(251,247,241,.95) 75%,var(--ivory) 100%)}
@@ -326,7 +327,10 @@
     .knot::before,.knot::after{height:20px}
     #couple .line{font-size:clamp(1rem,3.7vw,1.15rem);max-width:30ch}
     .countdown{gap:.5rem}
-    .countdown div{padding:.85rem .1rem .7rem;border-radius:14px}
+    .countdown div{padding:.85rem .1rem .7rem;border-radius:14px;background:rgba(255,255,255,.84);backdrop-filter:none;-webkit-backdrop-filter:none}  /* blur re-rasterises on every scrolled frame in WebKit */
+    .ev .meta .time{background:rgba(255,255,255,.3);backdrop-filter:none;-webkit-backdrop-filter:none}
+    #date{padding-bottom:calc(3rem + env(safe-area-inset-bottom,0px))}  /* the block sits below the couple's faces */
+    #date .inner{gap:1.1rem}
     .timeline{padding-left:26px;gap:1.4rem;margin-left:-13px;margin-right:13px}
     .timeline::before{left:6px}
     .day::before{left:-27px;width:15px;height:15px;margin-top:-7.5px;border-width:3px}
@@ -357,7 +361,7 @@
   }
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
-    html.js .rv{opacity:1;transform:none}
+    html.js .rv{opacity:1}
     .seal .deity,.seal .wreath .lf,.seal .wreath .bl,.seal-wrap .hindi,.shlok{opacity:1;transform:none}
     .seal .wreath .ring{stroke-dashoffset:0}
   }
@@ -677,7 +681,8 @@
      data-petals="soft"   → a few petals drifting down
      data-petals="finale" → a fuller shower */
   var PET = ['#F6DEE2','#EFC9D0','#E9AFB9','#FFFFFF','#F3D3D9'];
-  var burstLoader = null;
+  var burstLoader = null, lastScroll = 0;
+  window.addEventListener('scroll', function(){ lastScroll = performance.now(); }, {passive: true});
   document.querySelectorAll('canvas[data-petals]').forEach(function(c){
     if (reduce) return;
     var mode = c.dataset.petals, ctx = c.getContext('2d'), parts = [], W, H, running = false, raf;
@@ -690,6 +695,7 @@
     }
     function init(){ size(); parts = []; if (mode === 'burst') return; var n = Math.round(W / (mode === 'soft' ? 60 : 30) / dpr); for (var i = 0; i < n; i++) parts.push(mk(false)); }
     function draw(){
+      if (mode !== 'burst' && performance.now() - lastScroll < 200){ raf = requestAnimationFrame(draw); return; }  /* petals pause while the page scrolls */
       ctx.clearRect(0,0,W,H);
       for (var i = parts.length - 1; i >= 0; i--){
         var p = parts[i];
@@ -723,6 +729,7 @@
      petals burst, the door swings open and the invitation is revealed.
      The gate opens only on a tap: that tap is what lets phones start the music. */
   var loader = document.getElementById('loader'), opened = false;
+  Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise(function(r){ setTimeout(r, 3000); })]).then(function(){ loader.classList.add('ready'); });
   /* Background music: a flute cover of Kesariya, trimmed to 0:29–3:56 and looped. It starts as the door begins to swing
      and its volume rises with the door, reaching full when the door is fully open (through a Web Audio gain node,
      because iPhones ignore the volume property).
@@ -796,70 +803,57 @@
   /* scroll hint: the page hops four times, 2.4s apart, stopping early if the guest scrolls, swipes or scrolls with the wheel */
   var downCue = document.getElementById('downCue'), hopT = null, hops = 0;
   function hop(){ if (++hops > 4){ stopHop(); return; } document.body.classList.remove('hop'); void document.body.offsetWidth; document.body.classList.add('hop'); }
-  function stopHop(){ if (hopT){ clearInterval(hopT); hopT = null; } document.body.classList.remove('hop'); if (typeof updateSnap === 'function') updateSnap(); }
+  function stopHop(){ if (hopT){ clearInterval(hopT); hopT = null; if (typeof updateSnap === 'function') updateSnap(); } }  /* a running hop is left to finish: it ends at 0 */
   ['wheel','touchstart','keydown'].forEach(function(ev){ window.addEventListener(ev, stopHop, {passive: true}); });
   window.addEventListener('scroll', function(){ if (window.scrollY > 40) stopHop(); downCue.classList.toggle('hide', window.scrollY > window.innerHeight * .5); }, {passive: true});
   downCue.addEventListener('click', function(){ stopHop(); document.getElementById('couple').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); });
 
-  /* Page snapping, only while scrolling down: once the guest has scrolled down from a page top, the page
-     glides on to the next page top. The long events page is the exception: it scrolls freely and pulls
-     onto the venue page once that is half on screen.
-     Scrolling up never snaps: phones snap to the next page in the direction of the flick, so a small upward nudge
-     would otherwise fly a whole page up. Snapping is also paused while the page hops. */
-  var snapEls = Array.prototype.slice.call(document.querySelectorAll('#story,#couple,#date,#events,#venue,#finale,#contact')),
-      snapTick = false, snapIdle = null, scrollingUp = false, touchY = null;
+  /* Page snapping, only on the first three pages (story, couple, Save the date) and only while scrolling down:
+     once the guest has scrolled at least 75% of the way through a page and stops, the page glides on to the next
+     page top. Everything after Save the date scrolls freely.
+     Direction is read from where the page comes to rest compared with where it rested before (restY), never from
+     finger movement: a finger lifting off usually jitters the other way, which used to count an upward swipe as down.
+     Snapping is paused while the page hops. */
+  var snapEls = Array.prototype.slice.call(document.querySelectorAll('#story,#couple,#date')),
+      snapTick = false, snapIdle = null, restY = 0;
   function snapTarget(){
-    if (hopT || scrollingUp || gliding) return -1;
-    var y = window.scrollY, ih = window.innerHeight;
+    if (hopT || gliding) return -1;
+    var y = window.scrollY;
+    if (y <= restY) return -1;                                           /* not moving down */
     for (var i = 0; i < snapEls.length - 1; i++){
       var top = snapEls[i].offsetTop, next = snapEls[i + 1].offsetTop;
       if (y >= top && y < next){
-        var span = next - top, remaining = next - y;
-        if (remaining < 2 || y - top < 2) return -1;                     /* already on a page top: stay */
-        if (span > ih * 1.5) return remaining <= ih * .5 ? next : -1;   /* long page (events): pull to the venue once it is half visible */
-        return next;                                                     /* ordinary page: complete onto the next page */
+        if (y - top < 2 || next - y < 2) return -1;                     /* already on a page top: stay */
+        return (y - top) / (next - top) >= .75 ? next : -1;             /* three quarters through: complete onto the next page */
       }
     }
     return -1;
   }
-  /* The page glides to the next page top itself, slowly and eased, instead of using the browser's snap, which jumps on phones.
-     A touch, wheel or key during the glide cancels it. */
+  /* The page glides to the next page top itself, slowly, starting from a standstill (ease in and out) instead of
+     using the browser's snap, which jumps on phones. A touch, wheel or key during the glide cancels it. */
   var gliding = false;
   function glideTo(target){
     var start = window.scrollY, dist = target - start;
     if (Math.abs(dist) < 2) return;
-    if (reduce){ window.scrollTo(0, target); return; }
-    var t0 = performance.now(), dur = Math.min(1600, 900 + Math.abs(dist) * 1.2);
+    if (reduce){ window.scrollTo(0, target); restY = target; return; }
+    var t0 = performance.now(), dur = Math.min(2000, 1400 + Math.abs(dist) * 1.2);
     gliding = true;
     (function step(now){
       if (!gliding) return;
-      var p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      var p = Math.min(1, (now - t0) / dur), e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
       window.scrollTo(0, start + dist * e);
-      if (p < 1) requestAnimationFrame(step); else gliding = false;
+      if (p < 1) requestAnimationFrame(step); else { gliding = false; restY = target; }
     })(t0);
   }
-  function stopGlide(){ gliding = false; }
+  function stopGlide(){ if (gliding){ gliding = false; restY = window.scrollY; } }
   ['touchstart','wheel','keydown'].forEach(function(ev){ window.addEventListener(ev, stopGlide, {passive: true}); });
   function updateSnap(){
     snapTick = false;
     clearTimeout(snapIdle);
     if (gliding) return;
     /* Only once the scroll has settled, so the glide never fights a gesture that is still in progress. */
-    snapIdle = setTimeout(function(){ snapIdle = null; var t = snapTarget(); if (t >= 0) glideTo(t); }, 160);
+    snapIdle = setTimeout(function(){ snapIdle = null; var t = snapTarget(); if (t >= 0) glideTo(t); else restY = window.scrollY; }, 160);
   }
-  /* Direction comes from the gesture itself, not from scroll position: the browser's own snap animation
-     can move the page upward, and that must not count as the guest scrolling up. */
-  function setDir(up){ if (up !== scrollingUp){ scrollingUp = up; updateSnap(); } }
-  window.addEventListener('wheel', function(e){ if (e.deltaY) setDir(e.deltaY < 0); }, {passive: true});
-  window.addEventListener('touchstart', function(e){ touchY = e.touches[0].clientY; }, {passive: true});
-  window.addEventListener('touchmove', function(e){
-    var y = e.touches[0].clientY;
-    if (touchY !== null && Math.abs(y - touchY) > 4){ setDir(y > touchY); touchY = y; }
-  }, {passive: true});
-  window.addEventListener('keydown', function(e){
-    if (e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'Home') setDir(true);
-    else if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'End' || e.key === ' ') setDir(false);
-  });
   window.addEventListener('scroll', function(){ if (!snapTick){ snapTick = true; requestAnimationFrame(updateSnap); } }, {passive: true});
   updateSnap();
   if (!reduce) setTimeout(function(){ loader.classList.add('sweep'); }, 2200);
