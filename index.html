@@ -736,11 +736,12 @@
   window.addEventListener('scroll', function(){ if (window.scrollY > 40) stopHop(); downCue.classList.toggle('hide', window.scrollY > window.innerHeight * .5); }, {passive: true});
   downCue.addEventListener('click', function(){ stopHop(); document.getElementById('couple').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); });
 
-  /* Page snapping in two zones: the first three pages, and again from the venue page to the end.
+  /* Page snapping, only while scrolling down, in two zones: the first three pages, and again from the venue page to the end.
      The long events page in between scrolls freely, because mandatory snapping would keep pulling it to the nearest page top.
-     Snapping is also paused while the page hops, since the hop transform would otherwise trigger a re-snap. */
-  var eventsEl = document.getElementById('events'), venueEl = document.getElementById('venue'), snapTick = false, snapIdle = null;
-  function wantSnap(){ var y = window.scrollY, ih = window.innerHeight; return !hopT && (y < eventsEl.offsetTop - ih * .6 || y > venueEl.offsetTop - ih * .5); }
+     Scrolling up never snaps: phones snap to the next page in the direction of the flick, so a small upward nudge
+     from the venue would otherwise fly to the top of the events page. Snapping is also paused while the page hops. */
+  var eventsEl = document.getElementById('events'), venueEl = document.getElementById('venue'), snapTick = false, snapIdle = null, scrollingUp = false, touchY = null;
+  function wantSnap(){ var y = window.scrollY, ih = window.innerHeight; return !hopT && !scrollingUp && (y < eventsEl.offsetTop - ih * .6 || y > venueEl.offsetTop - ih * .5); }
   function updateSnap(){
     snapTick = false;
     var html = document.documentElement;
@@ -750,6 +751,19 @@
     clearTimeout(snapIdle);
     snapIdle = setTimeout(function(){ snapIdle = null; if (wantSnap()) html.classList.add('snap'); }, 160);
   }
+  /* Direction comes from the gesture itself, not from scroll position: the browser's own snap animation
+     can move the page upward, and that must not count as the guest scrolling up. */
+  function setDir(up){ if (up !== scrollingUp){ scrollingUp = up; updateSnap(); } }
+  window.addEventListener('wheel', function(e){ if (e.deltaY) setDir(e.deltaY < 0); }, {passive: true});
+  window.addEventListener('touchstart', function(e){ touchY = e.touches[0].clientY; }, {passive: true});
+  window.addEventListener('touchmove', function(e){
+    var y = e.touches[0].clientY;
+    if (touchY !== null && Math.abs(y - touchY) > 4){ setDir(y > touchY); touchY = y; }
+  }, {passive: true});
+  window.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'Home') setDir(true);
+    else if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'End' || e.key === ' ') setDir(false);
+  });
   window.addEventListener('scroll', function(){ if (!snapTick){ snapTick = true; requestAnimationFrame(updateSnap); } }, {passive: true});
   updateSnap();
   if (!reduce) setTimeout(function(){ loader.classList.add('sweep'); }, 2200);
